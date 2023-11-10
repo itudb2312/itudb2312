@@ -46,6 +46,21 @@ def pit_stops():
 
     return render_template('pit_stops.html',pit_stops=result)
 
+@app.route('/driver_standings')
+def driver_standings():
+    select_query = "SELECT * FROM driver_standings"
+    cursor.execute(select_query)
+    result = cursor.fetchall()
+
+    return render_template('driver_standings.html',driver_standings=result)
+
+@app.route('/sprint_results')
+def sprint_results():
+    select_query = "SELECT * FROM sprint_results"
+    cursor.execute(select_query)
+    result = cursor.fetchall()
+
+    return render_template('sprint_results.html',sprint_results=result)
 
 if __name__ == '__main__':
     app.run(port=8000, debug=True)
