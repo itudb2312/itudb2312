@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>F1 - Pit-Stops</title>
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static',filename='styles/style.css') }}"
+        />
+    </head>
+    <body>
+        <div class="topnav">
+            <a href="/">Home</a>
+            <a href="/results">Results</a>
+            <a href="/pit_stops">Pit Stops</a>
+        </div>
+        <h1>F1 - Pit Stops</h1>
+
+        <table>
+            <tr>
+                <th>RaceId</th>
+                <th>DriverId</th>
+                <th>Stop</th>
+                <th>Lap</th>
+                <th>Time</th>
+                <th>Duration</th>
+                <th>Milliseconds</th>
+            </tr>
+            {% for pit_stop in pit_stops %}
+            <tr>
+                <td>{{ pit_stop[0] }}</td>
+                <td>{{ pit_stop[1] }}</td>
+                <td>{{ pit_stop[2] }}</td>
+                <td>{{ pit_stop[3] }}</td>
+                <td>{{ pit_stop[4] }}</td>
+                <td>{{ pit_stop[5] }}</td>
+                <td>{{ pit_stop[6] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>

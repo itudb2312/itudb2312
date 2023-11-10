@@ -1,0 +1,4 @@
+mysql-data/
+__pycache__/
+
+.DS_Store
