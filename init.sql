@@ -96,3 +96,45 @@ FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
+
+-- Create the table if it doesn't exist
+CREATE TABLE IF NOT EXISTS circuits (
+    circuitId INT,
+    circuitRef VARCHAR(10),
+    name VARCHAR(10),
+    location VARCHAR(10),
+    country VARCHAR(10),
+    lat FLOAT,
+    lng FLOAT,
+    alt VARCHAR(10),
+    url VARCHAR(200)
+);
+
+-- Load data from CSV file into the table
+LOAD DATA LOCAL INFILE '/data/circuits.csv'
+INTO TABLE circuits
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+
+-- Create the table if it doesn't exist
+CREATE TABLE IF NOT EXISTS qualifying (
+    qualifyId INT,
+    raceId INT,
+    driverId INT,
+    constructorId INT,
+    number INT,
+    position INT,
+    q1 TIME,
+    q2 TIME,
+    q3 TIME
+);
+
+-- Load data from CSV file into the table
+LOAD DATA LOCAL INFILE '/data/qualifying.csv'
+INTO TABLE qualifying
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;

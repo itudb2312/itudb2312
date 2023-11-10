@@ -45,7 +45,7 @@ flask run -p 8000
 
 ## Authors
 
-[Kaan Karataş - 150200081](https://github.com/necrocultist)
+[Kaan Karataş - 150200081](https://github.com/karatask20)
 
 [Helin Aslı Aksoy - 150200705](https://github.com/helinasli)
 

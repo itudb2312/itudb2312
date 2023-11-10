@@ -62,5 +62,21 @@ def sprint_results():
 
     return render_template('sprint_results.html',sprint_results=result)
 
+@app.route('/circuits')
+def circuits():
+    select_query = "SELECT * FROM circuits"
+    cursor.execute(select_query)
+    result = cursor.fetchall()
+
+    return render_template('circuits.html',circuits=result)
+
+@app.route('/qualifying')
+def qualifying():
+    select_query = "SELECT * FROM qualifying"
+    cursor.execute(select_query)
+    result = cursor.fetchall()
+
+    return render_template('qualifying.html',qualifying=result)
+
 if __name__ == '__main__':
     app.run(port=8000, debug=True)
