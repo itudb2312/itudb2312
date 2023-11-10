@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>F1 - Drivers</title>
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static',filename='styles/style.css') }}"
+        />
+    </head>
+    <body>
+        <div class="topnav">
+            <a href="/">Home</a>
+            <a href="/races">Races</a>
+            <a href="/drivers">Drivers</a>
+            <a href="/results">Results</a>
+            <a href="/pit_stops">Pit Stops</a>
+        </div>
+
+        <h1>F1 - Drivers</h1>
+
+        <table>
+            <tr>
+                <th>Driver ID</th>
+                <th>Driver Reference</th>
+                <th>Number</th>
+                <th>Code</th>
+                <th>Forename</th>
+                <th>Surname</th>
+                <th>Date of Birth</th>
+                <th>Nationality</th>
+                <th>URL</th>
+            </tr>
+            {% for driver in drivers %}
+            <tr>
+                <td>{{ driver[0] }}</td>
+                <td>{{ driver[1] }}</td>
+                <td>{{ driver[2] }}</td>
+                <td>{{ driver[3] }}</td>
+                <td>{{ driver[4] }}</td>
+                <td>{{ driver[5] }}</td>
+                <td>{{ driver[6] }}</td>
+                <td>{{ driver[7] }}</td>
+                <td>{{ driver[8] }}</td>
+                <td>
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>
