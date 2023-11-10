@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>F1 - Races</title>
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static',filename='styles/style.css') }}"
+        />
+    </head>
+    <body>
+        <div class="topnav">
+            <a href="/">Home</a>
+            <a href="/races">Races</a>
+            <a href="/drivers">Drivers</a>
+            <a href="/results">Results</a>
+            <a href="/pit_stops">Pit Stops</a>
+        </div>
+        <h1>F1 - Races</h1>
+
+        <table>
+            <tr>
+                <th>RaceId</th>
+                <th>Year</th>
+                <th>Round</th>
+                <th>CircuitId</th>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>URL</th>
+                <th>FP1 Date</th>
+                <th>FP1 Time</th>
+                <th>FP2 Date</th>
+                <th>FP2 Time</th>
+                <th>FP3 Date</th>
+                <th>FP3 Time</th>
+                <th>Quali Date</th>
+                <th>Quali Time</th>
+                <th>Sprint Date</th>
+                <th>Sprint Time</th>
+            </tr>
+            {% for race in races %}
+            <tr>
+                <td>{{ race[0] }}</td>
+                <td>{{ race[1] }}</td>
+                <td>{{ race[2] }}</td>
+                <td>{{ race[3] }}</td>
+                <td>{{ race[4] }}</td>
+                <td>{{ race[5] }}</td>
+                <td>{{ race[6] }}</td>
+                <td>{{ race[7] }}</td>
+                <td>{{ race[8] }}</td>
+                <td>{{ race[9] }}</td>
+                <td>{{ race[10] }}</td>
+                <td>{{ race[11] }}</td>
+                <td>{{ race[12] }}</td>
+                <td>{{ race[13] }}</td>
+                <td>{{ race[14] }}</td>
+                <td>{{ race[15] }}</td>
+                <td>{{ race[16] }}</td>
+                <td>{{ race[17] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>

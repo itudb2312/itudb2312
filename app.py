@@ -28,6 +28,21 @@ def tables():
     result = cursor.fetchall()
     return result
 
+@app.route('/races')
+def races():
+    select_query = "SELECT * FROM races"
+    cursor.execute(select_query)
+    result = cursor.fetchall()
+
+    return render_template('races.html',races=result)
+
+@app.route('/drivers')
+def drivers():
+    select_query = "SELECT * FROM drivers"
+    cursor.execute(select_query)
+    result = cursor.fetchall()
+
+    return render_template('drivers.html',drivers=result)
 
 @app.route('/results')
 def results():

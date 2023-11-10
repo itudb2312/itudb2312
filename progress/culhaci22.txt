@@ -1,2 +1,7 @@
 09.11.2023
--Progress text file created.
+- Progress text file created.
+
+10.11.2023
+- HTML Pages for drivers and races tables are created
+- drivers and races tables are loaded into mysql database from .csv files
+- Created two approutes as drivers and races in app.py.
