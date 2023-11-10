@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name = "viewport" content="width=device-width,
+        initial-scale=1.0" />
+        <title>F1 - Circuits</title>
+        <link 
+            rel="stylesheet"
+            href="{{ url_for('static',filename='styles/style.css') }}"
+        />
+    </head>
+    <body>
+        <div class="topnav">
+            <a href="/">Home</a>
+            <a href="/results">Results</a>
+            <a href="/pit_stops">Pit Stops</a>
+            <a href="/driver_standings">Driver Standings</a>
+            <a href="/sprint_results">Sprint Results</a>
+            <a href="/circuits">Circuits</a>
+            <a href="/qualifying">Qualifying</a>
+        </div>
+        <h1>F1 - Circuits</h1>
+        <table>
+            <tr>
+                <th>Circuit ID</th>
+                <th>Circuit Reference</th>
+                <th>Name</th>
+                <th>City</th>
+                <th>Country</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>Altitude</th>
+                <th>Wikipedia URL</th>
+            </tr>
+            {% for circuit in circuits %}
+            <tr>
+                <td>{{ circuit[0] }}</td>
+                <td>{{ circuit[1] }}</td>
+                <td>{{ circuit[2] }}</td>
+                <td>{{ circuit[3] }}</td>
+                <td>{{ circuit[4] }}</td>
+                <td>{{ circuit[5] }}</td>
+                <td>{{ circuit[6] }}</td>
+                <td>{{ circuit[7] }}</td>
+                <td>{{ circuit[8] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>
