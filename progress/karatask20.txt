@@ -1,2 +1,9 @@
 10.11.2023
 - Progress file for the student Kaan Karataş - 150200081 created.
+- Loaded circuits and qualifying tables from .csv files via init.sql
+- HTML pages of circuits and qualifying tables are created
+- Two approutes are created for circuits and qualifying in app.py
+- Updated README.md to fix a redundant username error
+
+12.11.2023
+- Updated progress file for karatask20
