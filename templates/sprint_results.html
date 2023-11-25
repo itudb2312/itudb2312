@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Sprint Results</title>
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static',filename='styles/style.css') }}"
+        />
+    </head>
+    <body>
+        <div class="topnav">
+            <a href="/">Home</a>
+            <a href="/races">Races</a>
+            <a href="/drivers">Drivers</a>
+            <a href="/results">Results</a>
+            <a href="/pit_stops">Pit Stops</a>
+            <a href="/driver_standings">Driver Standings</a>
+            <a href="/sprint_results">Sprint Results</a>
+            <a href="/circuits">Circuits</a>
+            <a href="/qualifying">Qualifying</a>
+        </div>
+
+        <h1>Sprint Results</h1>
+        
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Race</th>
+                <th>Driver</th>
+                <th>Constructor</th>
+                <th>Number</th>
+                <th>Grid</th>
+                <th>Position</th>
+                <th>Points</th>
+                <th>Laps</th>
+                <th>Time</th>
+                <th>Milliseconds</th>
+                <th>Fastest Lap</th>
+                <th>Fastest Lap Time</th>
+            </tr>
+            {% for sprint_result in sprint_results %}
+            <tr>
+                <td>{{ sprint_result[0] }}</td>
+                <td>{{ sprint_result[1] }}</td>
+                <td>{{ sprint_result[2] }}</td>
+                <td>{{ sprint_result[3] }}</td>
+                <td>{{ sprint_result[4] }}</td>
+                <td>{{ sprint_result[5] }}</td>
+                <td>{{ sprint_result[6] }}</td>
+                <td>{{ sprint_result[7] }}</td>
+                <td>{{ sprint_result[8] }}</td>
+                <td>{{ sprint_result[9] }}</td>
+                <td>{{ sprint_result[10] }}</td>
+                <td>{{ sprint_result[11] }}</td>
+                <td>{{ sprint_result[12] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>
