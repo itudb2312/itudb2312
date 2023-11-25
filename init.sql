@@ -187,3 +187,20 @@ FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
+
+
+CREATE TABLE IF NOT EXISTS constructors (
+    constructorId INT,
+    constructorRef VARCHAR(30),
+    name VARCHAR(20),
+    nationality VARCHAR(20),
+    url VARCHAR(100)
+);
+
+-- Load data from CSV file into the table
+LOAD DATA LOCAL INFILE '/data/constructors.csv'
+INTO TABLE constructors
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
