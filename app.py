@@ -63,7 +63,14 @@ def pit_stops():
 
 @app.route('/driver_standings')
 def driver_standings():
-    select_query = "SELECT * FROM driver_standings"
+    select_query = """SELECT driver_standings.driverStandingsId, races.name, drivers.surname, 
+        driver_standings.points, driver_standings.position, driver_standings.wins
+    FROM driver_standings 
+    JOIN drivers ON driver_standings.driverId = drivers.driverId
+    JOIN races ON driver_standings.raceId = races.raceId
+    WHERE drivers.surname = "Hamilton"
+    ORDER BY driver_standings.driverStandingsId ASC;
+    """
     cursor.execute(select_query)
     result = cursor.fetchall()
 
@@ -71,7 +78,16 @@ def driver_standings():
 
 @app.route('/sprint_results')
 def sprint_results():
-    select_query = "SELECT * FROM sprint_results"
+    select_query = """SELECT sprint_results.resultId, races.name, drivers.surname,
+    constructors.name, sprint_results.number, sprint_results.grid, sprint_results.position, sprint_results.points,
+    sprint_results.laps, sprint_results.time, sprint_results.milliseconds, sprint_results.fastestLap, sprint_results.fastestLapTime
+    FROM sprint_results
+    JOIN drivers ON sprint_results.driverId = drivers.driverId
+    JOIN races ON sprint_results.raceId = races.raceId
+    JOIN constructors ON constructors.constructorId = sprint_results.constructorId
+    WHERE drivers.surname = "Hamilton"
+    ORDER BY sprint_results.resultId ASC; """
+
     cursor.execute(select_query)
     result = cursor.fetchall()
 
