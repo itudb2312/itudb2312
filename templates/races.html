@@ -13,13 +13,191 @@
         <div class="topnav">
             <a href="/">Home</a>
             <a href="/races">Races</a>
+            <a href="/who_won">Who Won?</a>
             <a href="/drivers">Drivers</a>
+            <a href="/driver_stats">Driver Stats</a>
             <a href="/results">Results</a>
             <a href="/pit_stops">Pit Stops</a>
+            <a href="/driver_standings">Driver Standings</a>
+            <a href="/sprint_results">Sprint Results</a>
+            <a href="/circuits">Circuits</a>
+            <a href="/qualifying">Qualifying</a>
         </div>
         <h1>F1 - Races</h1>
 
-        <table>
+        <form method="post" action="{{ url_for('races') }}">
+            <label for="selected_year">Select Year:</label>
+            <select name="selected_year">
+                <option value="" selected>All Years</option>
+                {% for year in range(1950, 2024) %}
+                    <option value="{{ year }}">{{ year }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Filter</button>
+            <button type="button" onclick="window.location.href='{{ url_for('races') }}'">Reset</button>
+        </form>
+
+
+
+        <button onclick="openAddModal()">Add New Race</button>
+
+        <!-- Add a hidden form for adding a new result -->
+        <div id="addModal" class="modal">
+            <div class="modal-content">
+                <form class="modal-form">
+                    <label for="race_id">Race ID:</label>
+                    <input
+                        type="text"
+                        name="race_id"
+                        placeholder="Enter Race ID"
+                        required
+                    />
+
+                    <label for="year">Year:</label>
+                    <input
+                        type="text"
+                        name="year"
+                        placeholder="Enter Year"
+                        required
+                    />
+
+                    <label for="round">Round:</label>
+                    <input
+                        type="text"
+                        name="round"
+                        placeholder="Enter Round"
+                        required
+                    />
+
+                    <label for="circuit_id">Circuit ID:</label>
+                    <input
+                        type="text"
+                        name="circuit_id"
+                        placeholder="Enter Circuit ID"
+                        required
+                    />
+
+                    <label for="name">Name:</label>
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="Enter Name"
+                        required
+                    />
+
+                    <label for="date">Date:</label>
+                    <input
+                        type="text"
+                        name="date"
+                        placeholder="Enter Date"
+                        required
+                    />
+
+                    <label for="time">Time:</label>
+                    <input
+                        type="text"
+                        name="time"
+                        placeholder="Enter Time"
+                        required
+                    />
+
+                    <label for="url">URL:</label>
+                    <input
+                        type="text"
+                        name="url"
+                        placeholder="Enter URL"
+                        required
+                    />
+
+                    <label for="fp1_date">FP1 Date:</label>
+                    <input
+                        type="text"
+                        name="fp1_date"
+                        placeholder="Enter FP1 Date"
+                        required
+                    />
+
+                    <label for="fp1_time">FP1 Time:</label>
+                    <input
+                        type="text"
+                        name="fp1_time"
+                        placeholder="Enter FP1 Time"
+                        required
+                    />
+
+                    <label for="fp2_date">FP2 Date:</label>
+                    <input
+                        type="text"
+                        name="fp2_date"
+                        placeholder="Enter FP2 Date"
+                        required
+                    />
+
+                    <label for="fp2_time">FP2 Time:</label>
+                    <input
+                        type="text"
+                        name="fp2_time"
+                        placeholder="Enter FP2 Time"
+                        required
+                    />
+
+                    <label for="fp3_date">FP3 Date:</label>
+                    <input
+                        type="text"
+                        name="fp3_date"
+                        placeholder="Enter FP3 Date"
+                        required
+                    />
+
+                    <label for="fp3_time">FP3 Time:</label>
+                    <input
+                        type="text"
+                        name="fp3_time"
+                        placeholder="Enter FP3 Time"
+                        required
+                    />
+
+                    <label for="quali_date">Quali Date:</label>
+                    <input
+                        type="text"
+                        name="quali_date"
+                        placeholder="Enter Quali Date"
+                        required
+                    />
+
+                    <label for="quali_time">Quali Time:</label>
+                    <input
+                        type="text"
+                        name="quali_time"
+                        placeholder="Enter Quali Time"
+                        required
+                    />
+
+                    <label for="sprint_date">Sprint Date:</label>
+                    <input
+                        type="text"
+                        name="sprint_date"
+                        placeholder="Enter Sprint Date"
+                        required
+                    />
+
+                    <label for="sprint_time">Sprint Time:</label>
+                    <input
+                        type="text"
+                        name="sprint_time"
+                        placeholder="Enter Sprint Time"
+                        required
+                    />
+
+                    <button type="submit">Add Result</button>
+                    <button type="button" onclick="closeAddModal()">
+                        Cancel
+                    </button>
+                </form>
+            </div>
+        </div>
+
+       <table>
             <tr>
                 <th>RaceId</th>
                 <th>Year</th>
@@ -39,6 +217,8 @@
                 <th>Quali Time</th>
                 <th>Sprint Date</th>
                 <th>Sprint Time</th>
+                <th>Edit</th>
+                <th>Delete</th>
             </tr>
             {% for race in races %}
             <tr>
@@ -60,8 +240,53 @@
                 <td>{{ race[15] }}</td>
                 <td>{{ race[16] }}</td>
                 <td>{{ race[17] }}</td>
+                <td>
+                    <a
+                        href="javascript:void(0);"
+                        onclick="openEditModal(${result.id})"
+                        >Edit</a
+                    >
+                </td>
+                <td>
+                    <a
+                        onclick="return confirm('Are you sure you want to delete this result?')"
+                        >Delete</a
+                    >
+                </td>
             </tr>
             {% endfor %}
         </table>
+
+        
+         <!-- ... (JavaScript code for modals) -->
+         <script>
+            function openAddModal() {
+                document.getElementById("addModal").style.display = "block";
+            }
+
+            function closeAddModal() {
+                document.getElementById("addModal").style.display = "none";
+            }
+            // function openEditModal(id) {
+            //     // Populate the edit form with data from the selected row
+            //     // (you need to write this function based on your requirements)
+            //     populateEditForm(id);
+            //     document.getElementById("editForm").style.display = "block";
+            // }
+
+            function deleteResult() {
+                // Make an asynchronous request to delete the result
+                fetch("/delete_race/" + window.raceIdToDelete, {
+                    method: "DELETE",
+                }).then((response) => {
+                    if (response.ok) {
+                        // Reload the page or update the table after deletion
+                        window.location.reload();
+                    } else {
+                        console.error("Error deleting result");
+                    }
+                });
+            }
+        </script>
     </body>
 </html>
