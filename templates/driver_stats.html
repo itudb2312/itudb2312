@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Driver Stats</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}" />
+    </head>
+    <body>
+        <div class="topnav">
+            <a href="/">Home</a>
+            <a href="/races">Races</a>
+            <a href="/who_won">Who Won?</a>
+            <a href="/drivers">Drivers</a>
+            <a href="/driver_stats">Driver Stats</a>
+            <a href="/results">Results</a>
+            <a href="/pit_stops">Pit Stops</a>
+            <a href="/driver_standings">Driver Standings</a>
+            <a href="/sprint_results">Sprint Results</a>
+            <a href="/circuits">Circuits</a>
+            <a href="/qualifying">Qualifying</a>
+        </div>
+
+        <div class="content">
+            <h1>Driver Statistics</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Total Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for driver in driver_stats %}
+                        <tr>
+                            <td>{{ driver[0] }}</td>
+                            <td>{{ driver[1] }} </td>
+                            <td>{{ driver[2] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
