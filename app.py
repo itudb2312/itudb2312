@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import mysql.connector as mysql
 
 app = Flask(__name__ )
@@ -28,21 +28,92 @@ def tables():
     result = cursor.fetchall()
     return result
 
-@app.route('/races')
+@app.route('/races', methods=['GET', 'POST'])
 def races():
-    select_query = "SELECT * FROM races"
-    cursor.execute(select_query)
-    result = cursor.fetchall()
+    if request.method == 'POST':
+        selected_year = request.form.get('selected_year')
 
-    return render_template('races.html',races=result)
+        # Check if the selected year is not empty or "All Years"
+        if selected_year and selected_year != "All Years":
+            # If a specific year is selected, filter by that year
+            select_query = f"SELECT * FROM races WHERE year = {selected_year}"
+            cursor.execute(select_query)
+            result = cursor.fetchall()
+            return render_template('races.html', races=result, selected_year=selected_year)
+        else:
+            # If no specific year is selected or "All Years," retrieve all races
+            select_query = "SELECT * FROM races"
+            cursor.execute(select_query)
+            result = cursor.fetchall()
+            return render_template('races.html', races=result, selected_year="All Years")
+    else:
+        # Retrieve all races when no specific year is selected
+        select_query = "SELECT * FROM races"
+        cursor.execute(select_query)
+        result = cursor.fetchall()
+        return render_template('races.html', races=result)
 
-@app.route('/drivers')
+@app.route('/who_won', methods=['GET'])
+def who_won():
+    query = "SELECT * FROM races"
+    cursor.execute(query)
+    races = cursor.fetchall()
+
+    race_data = []
+    for race in races:
+        winner_name = get_winner(race[0])
+        race_data.append({"race_name": race[4], "winner": winner_name})
+    return render_template('who_won.html', races=race_data)
+
+def get_winner(race_id):
+    query = f'''
+        SELECT drivers.forename, drivers.surname
+        FROM results
+        JOIN drivers ON results.driverId = drivers.driverId
+        WHERE results.raceId = {race_id}
+        ORDER BY results.points DESC
+        LIMIT 1
+    '''
+    cursor.execute(query)
+    winner = cursor.fetchone()
+
+    return f"{winner[0]} {winner[1]}" if winner else "No Winner"
+    
+@app.route('/drivers', methods=['GET', 'POST'])
 def drivers():
-    select_query = "SELECT * FROM drivers"
+    if request.method == 'POST':
+        selected_nationality = request.form.get('selected_nationality')
+        if selected_nationality and selected_nationality != 'all':
+            select_query = f"SELECT * FROM drivers WHERE nationality = '{selected_nationality}'"
+        else:
+            select_query = "SELECT * FROM drivers"
+    else:
+        select_query = "SELECT * FROM drivers"
+
     cursor.execute(select_query)
     result = cursor.fetchall()
 
-    return render_template('drivers.html',drivers=result)
+    # Retrieve distinct nationalities for the dropdown menu
+    cursor.execute("SELECT DISTINCT nationality FROM drivers")
+    nationalities = cursor.fetchall()
+
+    return render_template('drivers.html', drivers=result, nationalities=nationalities)
+
+@app.route('/driver_stats')
+def driver_stats():
+    # Query to get distinct drivers, their winning count, and total points
+    query = '''
+        SELECT drivers.forename, drivers.surname, SUM(results.points) AS total_points
+        FROM drivers
+        JOIN results ON drivers.driverId = results.driverId
+        GROUP BY drivers.forename, drivers.surname
+        ORDER BY total_points DESC;
+    '''
+
+    cursor.execute(query)
+    driver_stats = cursor.fetchall()
+
+    return render_template('driver_stats.html', driver_stats=driver_stats)
 
 @app.route('/results')
 def results():

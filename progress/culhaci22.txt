@@ -5,3 +5,17 @@
 - HTML Pages for drivers and races tables are created
 - drivers and races tables are loaded into mysql database from .csv files
 - Created two approutes as drivers and races in app.py.
+
+24.11.2023
+- Added a query to select the drivers only who has the choosen nationality in drivers page.
+- Added a query to select only the choosen years' races in races page. 
+- Updated races html file and added year selection by fetching distinct years from the database.
+- Updated drivers html file and added nationality selection by fetching distinct nationalities from the database.
+
+26.11.2023
+- HTML Page for Who Won (who_won.html) created.
+- 2 function and an approute created to display distinct races and their winners in app.py
+- Added links to the who_won.html file
+- HTML Page for driver stats created
+- Sorted drivers by total points gotten from every race in driver_stats approute.
+- Updated the links to the html pages.
