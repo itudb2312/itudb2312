@@ -27,15 +27,11 @@
         <h1>F1 - Circuits</h1>
         <table>
             <tr>
-                <th>Circuit ID</th>
-                <th>Circuit Reference</th>
                 <th>Name</th>
                 <th>City</th>
                 <th>Country</th>
-                <th>Latitude</th>
-                <th>Longitude</th>
                 <th>Altitude</th>
-                <th>Wikipedia URL</th>
+                <th>URL</th>
             </tr>
             {% for circuit in circuits %}
             <tr>
@@ -44,10 +40,6 @@
                 <td>{{ circuit[2] }}</td>
                 <td>{{ circuit[3] }}</td>
                 <td>{{ circuit[4] }}</td>
-                <td>{{ circuit[5] }}</td>
-                <td>{{ circuit[6] }}</td>
-                <td>{{ circuit[7] }}</td>
-                <td>{{ circuit[8] }}</td>
             </tr>
             {% endfor %}
         </table>

@@ -168,30 +168,33 @@ def sprint_results():
 def circuits():
     # Query selects circuit informatiom from northern hemisphere, groups them by countries and orders them by their altitudes
     select_query = """
-    SELECT name, location, country, alt, url 
+    SELECT circuits.name, circuits.location, circuits.country, MAX(circuits.alt) as max_alt, circuits.url 
     FROM circuits 
     WHERE lat > 0 
-    GROUP BY country 
-    ORDER BY alt DESC;"""
+    GROUP BY circuits.name, circuits.location, circuits.country, circuits.url 
+    ORDER BY max_alt DESC;
+    """
     cursor.execute(select_query)
     result = cursor.fetchall()
 
-    return render_template('circuits.html',circuits=result)
+    return render_template('circuits.html', circuits=result)
+
 
 @app.route('/qualifying')
 def qualifying():
     # Query selects driver information by joining the tables, groups them by countries and orders them by their qualifying1 results
     select_query = """
-        SELECT drivers.forename, drivers.surname, drivers.nationality
+        SELECT drivers.forename, drivers.surname, drivers.nationality, MAX(qualifying.q1) as max_q1
         FROM qualifying
         JOIN drivers ON qualifying.driverId = drivers.driverId
-        GROUP BY drivers.nationality
-        ORDER BY q1 ASC;
+        GROUP BY drivers.forename, drivers.surname, drivers.nationality
+        ORDER BY max_q1 ASC;
     """
     cursor.execute(select_query)
     result = cursor.fetchall()
 
-    return render_template('qualifying.html',qualifying=result)
+    return render_template('qualifying.html', qualifying=result)
+
 
 if __name__ == '__main__':
     app.run(port=8000, debug=True)

@@ -27,15 +27,10 @@
         <h1>F1 - Qualifying</h1>
         <table>
             <tr>
-                <th>Qualify ID</th>
-                <th>Race ID</th>
-                <th>Driver ID</th>
-                <th>Constructor ID</th>
-                <th>Car Number</th>
-                <th>Final Position</th>
-                <th>Qualifying 1 Time</th>
-                <th>Qualifying 2 Time</th>
-                <th>Qualifying 3 Time</th>
+                <th>Driver Name</th>
+                <th>Driver Surname</th>
+                <th>Driver Nationality</th>
+                <th>Qualifying 1</th>
             </tr>
             {% for qualify in qualifying %}
             <tr>
@@ -43,11 +38,6 @@
                 <td>{{ qualify[1] }}</td>
                 <td>{{ qualify[2] }}</td>
                 <td>{{ qualify[3] }}</td>
-                <td>{{ qualify[4] }}</td>
-                <td>{{ qualify[5] }}</td>
-                <td>{{ qualify[6] }}</td>
-                <td>{{ qualify[7] }}</td>
-                <td>{{ qualify[8] }}</td>
             </tr>
             {% endfor %}
         </table>
