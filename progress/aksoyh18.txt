@@ -12,3 +12,7 @@
 - Added get endpoints for pit-stops and results
 - Added requirements.txt file for installing dependencies
 - Added .gitignore file for ignoring the unnecessary files
+
+27.11.2023
+- Join tables for result.html
+- Renamed progress file

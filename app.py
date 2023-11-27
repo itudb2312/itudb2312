@@ -117,8 +117,16 @@ def driver_stats():
 
 @app.route('/results')
 def results():
-    
-    select_query = "SELECT * FROM results WHERE resultId < 100"
+    query = """
+    SELECT r.resultId, r.driverId, d.forename, d.surname, c.constructorRef, r.rank, r.grid,r.position, r.positionOrder,r.points,r.laps,r.time,r.milliseconds,r.fastestLap
+    FROM results r
+    JOIN drivers d ON r.driverId = d.driverId
+    JOIN constructors c ON r.constructorId = c.constructorId
+    LIMIT 100;
+    """
+
+    select_query = query
+
     cursor.execute(select_query)
     result = cursor.fetchall()
 
