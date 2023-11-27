@@ -11,4 +11,7 @@
 25.11.2023
 - Changed circuit and qualifying queries to represent select, where, 
 join, order by, group by statements better
+
+27.11.2023
+- Fixed the group by and order by errors in circuit and qualifying queries and updated their pages accordingly
 - Updated progress file for karatask20
