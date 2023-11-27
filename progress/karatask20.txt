@@ -7,3 +7,8 @@
 
 12.11.2023
 - Updated progress file for karatask20
+
+25.11.2023
+- Changed circuit and qualifying queries to represent select, where, 
+join, order by, group by statements better
+- Updated progress file for karatask20
