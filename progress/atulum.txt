@@ -1,1 +1,14 @@
-p
+07.11.2023
+- Progress file is created.
+
+10.11.2023
+- HTML pages for tables driver_standings and sprint_results are created.
+- Relevant tables are initialized.
+- The tables can be viewed, app.py is updated.
+
+26.11.2023
+- Queries are updated to show relevant information on the table.
+- Join operation is used to show driver's name and race's name instead of IDs
+
+27.11.2023
+- Filtering by Driver's surname option is added.

@@ -24,6 +24,16 @@
 
         <h1>Driver Standings</h1>
 
+        <form action="{{ url_for('driver_standings') }}" method="post">
+            <div class="field">
+                <label for="driver" class="label">Driver:</label>
+                <div class="control">
+                  <input type="text" name="driver" class="input" required="required"/>
+                  <button type="submit">Filter</button>
+                </div>
+            </div>
+        </form>
+
         <table>
             <tr>
                 <th>ID</th>

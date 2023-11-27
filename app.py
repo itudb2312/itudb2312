@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import mysql.connector as mysql
 
 app = Flask(__name__ )
@@ -46,9 +46,20 @@ def pit_stops():
 
     return render_template('pit_stops.html',pit_stops=result)
 
-@app.route('/driver_standings')
+@app.route('/driver_standings', methods=['GET', 'POST'])
 def driver_standings():
     select_query = "SELECT * FROM driver_standings"
+    driver = "Hamilton"
+    if request.method == 'POST':
+        driver = request.form.get('driver')
+    select_query = f"""SELECT driver_standings.driverStandingsId, races.name, drivers.surname, 
+        driver_standings.points, driver_standings.position, driver_standings.wins
+    FROM driver_standings 
+    JOIN drivers ON driver_standings.driverId = drivers.driverId
+    JOIN races ON driver_standings.raceId = races.raceId
+    WHERE drivers.surname = "{driver}"
+    ORDER BY driver_standings.driverStandingsId ASC;
+    """
     cursor.execute(select_query)
     result = cursor.fetchall()
 
