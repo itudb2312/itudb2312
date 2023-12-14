@@ -12,10 +12,20 @@
     <body>
         <div class="topnav">
             <a href="/">Home</a>
-            <a href="/races">Races</a>
-            <a href="/who_won">Who Won?</a>
-            <a href="/drivers">Drivers</a>
-            <a href="/driver_stats">Driver Stats</a>
+            <div class="dropdown">
+                <button class="dropbtn">Races</button>
+                <div class="dropdown-content">
+                    <a href="/races">All Races</a>
+                    <a href="/who_won">Who Won</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <button class="dropbtn">Drivers</button>
+                <div class="dropdown-content">
+                    <a href="/drivers">All Drivers</a>
+                    <a href="/driver_stats">Driver Stats</a>
+                </div>
+            </div>
             <a href="/results">Results</a>
             <a href="/pit_stops">Pit Stops</a>
             <a href="/driver_standings">Driver Standings</a>
@@ -199,10 +209,8 @@
 
        <table>
             <tr>
-                <th>RaceId</th>
                 <th>Year</th>
                 <th>Round</th>
-                <th>CircuitId</th>
                 <th>Name</th>
                 <th>Date</th>
                 <th>Time</th>
@@ -222,10 +230,8 @@
             </tr>
             {% for race in races %}
             <tr>
-                <td>{{ race[0] }}</td>
                 <td>{{ race[1] }}</td>
                 <td>{{ race[2] }}</td>
-                <td>{{ race[3] }}</td>
                 <td>{{ race[4] }}</td>
                 <td>{{ race[5] }}</td>
                 <td>{{ race[6] }}</td>

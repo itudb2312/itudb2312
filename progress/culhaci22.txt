@@ -19,3 +19,9 @@
 - HTML Page for driver stats created
 - Sorted drivers by total points gotten from every race in driver_stats approute.
 - Updated the links to the html pages.
+
+14.12.2023
+- Added dropdown menus for races and drivers table, updated all html files accordingly and the css file.
+- Added f1logo.png and updated the homepage.
+- Updated races and drivers pages to not display the ID values.
+- Included various css and html improvements to homepage.
