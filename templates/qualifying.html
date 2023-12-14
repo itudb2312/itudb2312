@@ -13,10 +13,20 @@
     <body>
         <div class="topnav">
             <a href="/">Home</a>
-            <a href="/races">Races</a>
-            <a href="/who_won">Who Won?</a>
-            <a href="/drivers">Drivers</a>
-            <a href="/driver_stats">Driver Stats</a>
+            <div class="dropdown">
+                <button class="dropbtn">Races</button>
+                <div class="dropdown-content">
+                    <a href="/races">All Races</a>
+                    <a href="/who_won">Who Won</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <button class="dropbtn">Drivers</button>
+                <div class="dropdown-content">
+                    <a href="/drivers">All Drivers</a>
+                    <a href="/driver_stats">Driver Stats</a>
+                </div>
+            </div>
             <a href="/results">Results</a>
             <a href="/pit_stops">Pit Stops</a>
             <a href="/driver_standings">Driver Standings</a>
