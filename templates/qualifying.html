@@ -31,16 +31,44 @@
             <a href="/pit_stops">Pit Stops</a>
             <a href="/driver_standings">Driver Standings</a>
             <a href="/sprint_results">Sprint Results</a>
-            <a href="/circuits">Circuits</a>
-            <a href="/qualifying">Qualifying</a>
+            <div class="dropdown">
+                <button class="dropbtn">Circuits</button>
+                <div class="dropdown-content">
+                    <a href="/circuits">All Circuits</a>
+                    <a href="#" id="placeholder">Placeholder</a>
+                </div>
+            </div>            
+            <div class="dropdown">
+                <button class="dropbtn">Qualifying</button>
+                <div class="dropdown-content">
+                    <a href="/circuits">All Qualifying Data</a>
+                    <a href="#" id="placeholder">Driver Data Related To Qualifying</a>
+                </div>
+            </div>            
         </div>
         <h1>F1 - Qualifying</h1>
+
+        <form method="post" action="{{ url_for('qualifying') }}">
+            <label for="selected_driver">Select Qualifying Driver:</label>
+            <select name="selected_driver" id="selected_driver">
+                <option value="all">All Drivers</option>
+                {% for driver in drivers %}
+                    <option value="{{ driver[0] }}">{{ driver[0] }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Select</button>
+            <a href="{{ url_for('countries') }}"><button type="button">Reset Driver</button></a>
+        </form>    
+
         <table>
             <tr>
                 <th>Driver Name</th>
                 <th>Driver Surname</th>
                 <th>Driver Nationality</th>
+                <th>Race Date</th>
                 <th>Qualifying 1</th>
+                <th>Qualifying 2</th>
+                <th>Qualifying 3</th>
             </tr>
             {% for qualify in qualifying %}
             <tr>
@@ -48,6 +76,9 @@
                 <td>{{ qualify[1] }}</td>
                 <td>{{ qualify[2] }}</td>
                 <td>{{ qualify[3] }}</td>
+                <td>{{ qualify[4] }}</td>
+                <td>{{ qualify[5] }}</td>
+                <td>{{ qualify[6] }}</td>
             </tr>
             {% endfor %}
         </table>
