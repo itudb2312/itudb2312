@@ -164,36 +164,140 @@ def sprint_results():
 
     return render_template('sprint_results.html',sprint_results=result)
 
-@app.route('/circuits')
+@app.route('/circuits', methods=['GET', 'POST'])
 def circuits():
-    # Query selects circuit informatiom from northern hemisphere, groups them by countries and orders them by their altitudes
-    select_query = """
-    SELECT circuits.name, circuits.location, circuits.country, MAX(circuits.alt) as max_alt, circuits.url 
-    FROM circuits 
-    WHERE lat > 0 
-    GROUP BY circuits.name, circuits.location, circuits.country, circuits.url 
-    ORDER BY max_alt DESC;
-    """
-    cursor.execute(select_query)
-    result = cursor.fetchall()
+    if request.method == 'POST':
+        selected_hemisphere = request.form.get('selected_hemisphere')
 
-    return render_template('circuits.html', circuits=result)
+        # Check if the selected hemisphere is not empty or "All Hemispheres"
+        if selected_hemisphere and selected_hemisphere != "All Hemispheres":
+            # If a specific hemisphere is selected, filter by that hemisphere
+            if selected_hemisphere == "Northern Hemisphere":
+                select_query = "SELECT * FROM circuits WHERE lat > 0"
+            else:
+                select_query = "SELECT * FROM circuits WHERE lat < 0"
+            cursor.execute(select_query)
+            result = cursor.fetchall()
+            return render_template('circuits.html', circuits=result, selected_hemisphere=selected_hemisphere)
+        else:
+            # If no specific hemisphere is selected or "All Hemispheres," retrieve all circuits
+            select_query = "SELECT * FROM circuits"
+            cursor.execute(select_query)
+            result = cursor.fetchall()
+            return render_template('circuits.html', circuits=result, selected_hemisphere="All Hemispheres")
+    else:
+        # Retrieve all circuit information, group them by countries, and order them by altitudes
+        select_query = """SELECT circuits.name, circuits.location, circuits.country, MAX(circuits.alt) as altitude, circuits.url
+                        FROM circuits
+                        GROUP BY circuits.name, circuits.location, circuits.country, circuits.url
+                        ORDER BY altitude DESC;"""
+        cursor.execute(select_query)
+
+        result = cursor.fetchall()
+        return render_template('circuits.html', circuits=result)
 
 
-@app.route('/qualifying')
+@app.route('/qualifying', methods=['GET', 'POST'])
 def qualifying():
-    # Query selects driver information by joining the tables, groups them by countries and orders them by their qualifying1 results
-    select_query = """
-        SELECT drivers.forename, drivers.surname, drivers.nationality, MAX(qualifying.q1) as max_q1
-        FROM qualifying
-        JOIN drivers ON qualifying.driverId = drivers.driverId
-        GROUP BY drivers.forename, drivers.surname, drivers.nationality
-        ORDER BY max_q1 ASC;
-    """
-    cursor.execute(select_query)
-    result = cursor.fetchall()
+    # Fetch the list of driver surnames for the dropdown
+    cursor.execute("SELECT DISTINCT drivers.surname FROM qualifying JOIN drivers ON qualifying.driverId = drivers.driverId")
+    driver_surnames = [driver[0] for driver in cursor.fetchall()]
 
-    return render_template('qualifying.html', qualifying=result)
+    # Fetch the list of drivers for the dropdown
+    cursor.execute("SELECT DISTINCT driverId FROM qualifying")
+    drivers = [str(driver[0]) for driver in cursor.fetchall()]
+
+    if request.method == 'POST':
+        selected_surname = request.form.get('selected_surname')
+
+        # Check if the selected surname is not empty or "All Drivers"
+        if selected_surname and selected_surname != "All Drivers":
+            select_query = """
+                SELECT
+                    qualifying.qualifyId,
+                    races.date as raceDate,
+                    drivers.forename as driverName,
+                    drivers.surname as driverSurname,
+                    constructors.name as constructorName,
+                    qualifying.number,
+                    qualifying.position,
+                    qualifying.q1,
+                    qualifying.q2,
+                    qualifying.q3
+                FROM
+                    qualifying
+                JOIN
+                    races ON qualifying.raceId = races.raceId
+                JOIN
+                    drivers ON qualifying.driverId = drivers.driverId
+                JOIN
+                    constructors ON qualifying.constructorId = constructors.constructorId
+                WHERE
+                    drivers.surname = %s
+                ORDER BY
+                    races.date DESC
+            """
+            cursor.execute(select_query, (selected_surname,))
+            result = cursor.fetchall()
+            return render_template('qualifying.html', qualifying=result, selected_surname=selected_surname, driver_surnames=driver_surnames, drivers=drivers)
+        
+        else:
+            select_query = """
+                SELECT
+                    qualifying.qualifyId,
+                    races.date as raceDate,
+                    drivers.forename as driverName,
+                    drivers.surname as driverSurname,
+                    constructors.name as constructorName,
+                    qualifying.number,
+                    qualifying.position,
+                    qualifying.q1,
+                    qualifying.q2,
+                    qualifying.q3
+                FROM
+                    qualifying
+                JOIN
+                    races ON qualifying.raceId = races.raceId
+                JOIN
+                    drivers ON qualifying.driverId = drivers.driverId
+                JOIN
+                    constructors ON qualifying.constructorId = constructors.constructorId
+                GROUP BY
+                    drivers.surname
+            """
+            cursor.execute(select_query)
+            result = cursor.fetchall()
+            return render_template('qualifying.html', qualifying=result, selected_surname="All Surnames", driver_surnames=driver_surnames, drivers=drivers)
+    else:
+        # Initialize selected_surname and selected_driver to empty strings or default values
+        selected_surname = ""
+
+        select_query = """
+            SELECT
+                qualifying.qualifyId,
+                races.date as raceDate,
+                drivers.forename as driverName,
+                drivers.surname as driverSurname,
+                constructors.name as constructorName,
+                qualifying.number,
+                qualifying.position,
+                qualifying.q1,
+                qualifying.q2,
+                qualifying.q3
+            FROM
+                qualifying
+            JOIN
+                races ON qualifying.raceId = races.raceId
+            JOIN
+                drivers ON qualifying.driverId = drivers.driverId
+            JOIN
+                constructors ON qualifying.constructorId = constructors.constructorId
+            ORDER BY
+                races.date DESC
+        """
+        cursor.execute(select_query)
+        result = cursor.fetchall()
+        return render_template('qualifying.html', qualifying=result, selected_surname=selected_surname, driver_surnames=driver_surnames, drivers=drivers)
 
 
 if __name__ == '__main__':
