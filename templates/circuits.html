@@ -29,28 +29,26 @@
         <a href="/results">Results</a>
         <a href="/pit_stops">Pit Stops</a>
         <a href="/driver_standings">Driver Standings</a>
-        <a href="/sprint_results">Sprint Results</a>
+        <a href="/sprint_results">Sprint Results</a>            
         <div class="dropdown">
-            <button class="dropbtn">Circuits</button>
+            <button class="dropbtn">Qualifying And Circuit Data</button>
             <div class="dropdown-content">
+                <a href="/qualifying">Driver Qualifying Data</a>
                 <a href="/circuits">All Circuits</a>
-                <a href="#" id="placeholder">Placeholder</a>
             </div>
-        </div>
-        <a href="/qualifying">Qualifying</a>
+        </div>           
     </div>
     <h1>F1 - Circuits</h1>
 
     <form method="post" action="{{ url_for('circuits') }}">
-        <label for="selected_country">Select Circuit Country:</label>
-        <select name="selected_country" id="selected_country">
-            <option value="all">All Countries</option>
-            {% for country in countries %}
-                <option value="{{ nationality[0] }}">{{ caountry[0] }}</option>
-            {% endfor %}
+        <label for="selected_hemisphere">Select Hemisphere:</label>
+        <select name="selected_hemisphere" id="selected_hemisphere">
+            <option value="All Hemispheres">All Hemispheres</option>
+            <option value="Northern Hemisphere">Northern Hemisphere</option>
+            <option value="Southern Hemisphere">Southern Hemisphere</option>
         </select>
         <button type="submit">Select</button>
-        <a href="{{ url_for('countries') }}"><button type="button">Reset Country</button></a>
+        <a href="{{ url_for('circuits') }}"><button type="button">Reset Hemisphere</button></a>
     </form>
 
     <table>
