@@ -15,3 +15,9 @@ join, order by, group by statements better
 27.11.2023
 - Fixed the group by and order by errors in circuit and qualifying queries and updated their pages accordingly
 - Updated progress file for karatask20
+
+16.12.2023 - 17.12.2023
+- Added filtering by driver and hemisphere to related webpages and queries
+- Added more functionality to qualifying and circuit queries and made them show more useful data
+- Updated selection for qualifying and circuit data to dropdown
+- Updated all hmtl files according to new features/fixes
