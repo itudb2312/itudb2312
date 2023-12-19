@@ -121,13 +121,20 @@ def results():
     if request.method == 'POST':
         year = request.form['year']
         race = request.form['race']
-        select_query = f"""SELECT results.positionOrder, drivers.number ,CONCAT(drivers.forename, ' ', drivers.surname) as driver, constructors.name, results.points
-        FROM results
-        JOIN races ON results.raceId = races.raceId
-        JOIN drivers ON results.driverId = drivers.driverId
-        JOIN constructors ON results.constructorId = constructors.constructorId
-        WHERE races.year = {year} AND races.name = "{race}"
-        ORDER BY results.positionOrder ASC"""
+        select_query = f"""
+        SELECT 
+            res.positionOrder,
+            drv.number,
+            CONCAT(drv.forename, ' ', drv.surname) AS driver,
+            con.name AS constructor,
+            res.points
+        FROM 
+            results res
+        JOIN ( SELECT raceId FROM races WHERE year = {year} AND name = "{race}") AS r ON res.raceId = r.raceId
+        JOIN drivers drv ON res.driverId = drv.driverId
+        JOIN constructors con ON res.constructorId = con.constructorId
+        ORDER BY 
+            res.positionOrder ASC"""
         cursor.execute(select_query)
         result = cursor.fetchall()
 

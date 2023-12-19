@@ -50,33 +50,21 @@
             </select>
 
             <label for="race">Yarış İsmi:</label>
-            <select id="race" name="race">
-                <option value="australia">Avustralya Grand Prix</option>
-                <option value="monaco">Monako Grand Prix</option>
-                <!-- Diğer yarışları buraya ekleyebilirsin -->
-            </select>
+            <select id="race" name="race"></select>
 
-            <input type="submit" value="Filtrele" />
+            <input type="submit" value="Filter" />
         </form>
 
-        <table>
-            <tr>
-                <th>Position</th>
-                <th>Number</th>
-                <th>Driver</th>
-                <th>Constructor</th>
-                <th>Points</th>
-            </tr>
-            {% for result in results %}
-            <tr>
-                <td>{{ result[0] }}</td>
-                <td>{{ result[1] }}</td>
-                <td>{{ result[2] }}</td>
-                <td>{{ result[3] }}</td>
-                <td>{{ result[4] }}</td>
-            </tr>
-            {% endfor %}
-        </table>
+        {% for result in results %}
+        <div class="result">
+            <div class="result_position">{{ result[0] }}</div>
+            <div class="result_number">{{ result[1] }}</div>
+            <div class="result_driver">{{ result[2] }}</div>
+            <div class="result_constructor">{{ result[3] }}</div>
+            <div class="result_points">{{ result[4] }}</div>
+        </div>
+        {% endfor %}
+
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
             $(document).ready(function () {
