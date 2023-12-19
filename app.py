@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request,jsonify
 import mysql.connector as mysql
 
 app = Flask(__name__ )
@@ -115,14 +115,40 @@ def driver_stats():
 
     return render_template('driver_stats.html', driver_stats=driver_stats)
 
-@app.route('/results')
+@app.route('/results',methods=['GET', 'POST'])
 def results():
     
+    if request.method == 'POST':
+        year = request.form['year']
+        race = request.form['race']
+        select_query = f"""SELECT results.positionOrder, drivers.number ,CONCAT(drivers.forename, ' ', drivers.surname) as driver, constructors.name, results.points
+        FROM results
+        JOIN races ON results.raceId = races.raceId
+        JOIN drivers ON results.driverId = drivers.driverId
+        JOIN constructors ON results.constructorId = constructors.constructorId
+        WHERE races.year = {year} AND races.name = "{race}"
+        ORDER BY results.positionOrder ASC"""
+        cursor.execute(select_query)
+        result = cursor.fetchall()
+
+        return render_template('results.html',results=result)
+
     select_query = "SELECT * FROM results WHERE resultId < 100"
     cursor.execute(select_query)
     result = cursor.fetchall()
 
     return render_template('results.html',results=result)
+
+@app.route('/get_races', methods=['POST'])
+def get_races():
+    selected_year = request.form['year']
+    select_query = f"""SELECT name
+        FROM races
+        WHERE year = {selected_year}
+        """
+    cursor.execute(select_query)
+    result = cursor.fetchall()
+    return jsonify({'races': result})
 
 @app.route('/pit_stops')
 def pit_stops():
