@@ -39,7 +39,7 @@
             </div>           
         </div>
 
-        <h1>F1 - Drivers</h1>
+        <h1>Formula 1 Drivers</h1>
         
         <form method="post" action="{{ url_for('drivers') }}">
             <label for="selected_nationality">Select Nationality:</label>
@@ -57,84 +57,75 @@
         <button onclick="openAddModal()">Add New Driver</button>
 
         <div id="addModal" class="modal">
-            <div class="modal-content">
-                <form class="modal-form">
-                    <label for="driver_id">Driver ID:</label>
-                    <input
-                        type="text"
-                        name="driver_id"
-                        placeholder="Enter Driver ID"
-                        required
-                    />
+            <div class = "modal-content" id="addDriverForm" method="post" action="{{ url_for('add_driver') }}">
+                <form class = "modal-form" id="addDriverForm" method="post" action="{{ url_for('add_driver') }}">
+                    <label for="driverId">Driver ID:</label>
+                    <input type="text" name="driverId" placeholder="Enter Driver ID" required/>
 
-                    <label for="driver_ref">Driver Reference:</label>
-                    <input
-                        type="text"
-                        name="driver_ref"
-                        placeholder="Enter Driver Reference"
-                        required
-                    />
+                    <label for="driverRef">Driver Reference:</label>
+                    <input type="text" name="driverRef" placeholder="Enter Driver Reference" required/>
 
                     <label for="number">Number:</label>
-                    <input
-                        type="text"
-                        name="number"
-                        placeholder="Enter Number"
-                        required
-                    />
+                    <input type="text" name="number" placeholder="Enter Number" required/>
 
                     <label for="code">Code:</label>
-                    <input
-                        type="text"
-                        name="code"
-                        placeholder="Enter Code"
-                        required
-                    />
+                    <input type="text" name="code" placeholder="Enter Code" required/>
 
                     <label for="forename">Forename:</label>
-                    <input
-                        type="text"
-                        name="forename"
-                        placeholder="Enter Forename"
-                        required
-                    />
+                    <input type="text" name="forename" placeholder="Enter Forename" required/>
 
                     <label for="surname">Surname:</label>
-                    <input
-                        type="text"
-                        name="surname"
-                        placeholder="Enter Surname"
-                        required
-                    />
+                    <input type="text" name="surname" placeholder="Enter Surname" required/>
 
                     <label for="dob">Date of Birth:</label>
-                    <input
-                        type="text"
-                        name="dob"
-                        placeholder="Enter Date of Birth"
-                        required
-                    />
+                    <input type="text" name="dob" placeholder="Enter Date of Birth" required/>
 
                     <label for="nationality">Nationality:</label>
-                    <input
-                        type="text"
-                        name="nationality"
-                        placeholder="Enter Nationality"
-                        required
-                    />
+                    <input type="text" name="nationality" placeholder="Enter Nationality" required/>
 
                     <label for="url">URL:</label>
-                    <input
-                        type="text"
-                        name="url"
-                        placeholder="Enter URL"
-                        required
-                    />
+                    <input type="text" name="url" placeholder="Enter URL" required/>
 
-                    <button type="submit">Add Result</button>
-                    <button type="button" onclick="closeAddModal()">
-                        Cancel
-                    </button>
+                    <button type="submit">Add Driver</button>
+                    <button type="button" onclick="closeAddModal()">Cancel</button>
+                </form>
+            </div>
+        </div>
+
+                
+        <!-- Edit Driver Modal -->
+        <div id="editModal" class="modal">
+            <div class="modal-content" id="editDriverForm">
+                <form class="modal-form" method="post" action="{{ url_for('edit_driver') }}">
+                    <label for="driverId">Driver ID:</label>
+                    <input type="text" name="driverId" id="driverId" required readonly/>
+
+                    <label for="driverRef">Driver Reference:</label>
+                    <input type="text" name="driverRef" id="driverRef" required/>
+
+                    <label for="number">Number:</label>
+                    <input type="text" name="number" id="number" required/>
+
+                    <label for="code">Code:</label>
+                    <input type="text" name="code" id="code" required/>
+
+                    <label for="forename">Forename:</label>
+                    <input type="text" name="forename" id="forename" required/>
+
+                    <label for="surname">Surname:</label>
+                    <input type="text" name="surname" id="surname" required/>
+
+                    <label for="dob">Date of Birth:</label>
+                    <input type="text" name="dob" id="dob" required/>
+
+                    <label for="nationality">Nationality:</label>
+                    <input type="text" name="nationality" id="nationality" required/>
+
+                    <label for="url">URL:</label>
+                    <input type="text" name="url" id="url" required/>
+
+                    <button type="submit">Save Changes</button>
+                    <button type="button" onclick="closeEditModal()">Cancel</button>
                 </form>
             </div>
         </div>
@@ -149,8 +140,7 @@
                 <th>Date of Birth</th>
                 <th>Nationality</th>
                 <th>URL</th>
-                <th>Edit</th>
-                <th>Delete</th>
+                <th>Actions</th>
             </tr>
             {% for driver in drivers %}
             <tr>
@@ -163,17 +153,10 @@
                 <td>{{ driver[7] }}</td>
                 <td>{{ driver[8] }}</td>
                 <td>
-                    <a
-                        href="javascript:void(0);"
-                        onclick="openEditModal(${result.id})"
-                        >Edit</a
-                    >
-                </td>
-                <td>
-                    <a
-                        onclick="return confirm('Are you sure you want to delete this result?')"
-                        >Delete</a
-                    >
+                    <button type="button" onclick="openEditModal('{{ driver[0] }}')">Edit</button>
+                    <form method="post" action="{{ url_for('delete_driver', driver_id=driver[0]) }}">
+                        <button type="submit" onclick="return confirm('Are you sure you want to delete this driver?')">Delete</button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}
@@ -181,32 +164,21 @@
 
          <!-- ... (JavaScript code for modals) -->
          <script>
+            function openEditModal(driverId) {
+                document.getElementById("driverId").value = driverId;
+                document.getElementById("editModal").style.display = "block";
+            }
+
+            function closeEditModal() {
+                document.getElementById("editModal").style.display = "none";
+            }
+
             function openAddModal() {
                 document.getElementById("addModal").style.display = "block";
             }
-
+        
             function closeAddModal() {
                 document.getElementById("addModal").style.display = "none";
-            }
-            // function openEditModal(id) {
-            //     // Populate the edit form with data from the selected row
-            //     // (you need to write this function based on your requirements)
-            //     populateEditForm(id);
-            //     document.getElementById("editForm").style.display = "block";
-            // }
-
-            function deleteResult() {
-                // Make an asynchronous request to delete the result
-                fetch("/delete_driver/" + window.driverIdToDelete, {
-                    method: "DELETE",
-                }).then((response) => {
-                    if (response.ok) {
-                        // Reload the page or update the table after deletion
-                        window.location.reload();
-                    } else {
-                        console.error("Error deleting result");
-                    }
-                });
             }
         </script>
     </body>

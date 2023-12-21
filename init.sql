@@ -1,7 +1,7 @@
 USE mysql;
 
 CREATE TABLE IF NOT EXISTS races (
-    raceId INT,
+    raceId INT AUTO_INCREMENT,
     year INT,
     round INT,
     circuitId INT,
@@ -18,7 +18,9 @@ CREATE TABLE IF NOT EXISTS races (
     quali_date DATE,
     quali_time TIME,   
     sprint_date DATE,
-    sprint_time TIME
+    sprint_time TIME,
+
+    PRIMARY KEY(raceId)
 );
 
 -- Load data from CSV file into the table
@@ -26,29 +28,31 @@ LOAD DATA LOCAL INFILE '/data/races.csv'
 INTO TABLE races
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
+LINES TERMINATED BY '\r\n'
 IGNORE 1 ROWS;
 
 CREATE TABLE IF NOT EXISTS drivers (
-    driverId INT,
-    drivrRef VARCHAR(20),
+    driverId INT AUTO_INCREMENT,
+    driverRef VARCHAR(20),
     number INT,
     code CHAR(3),
     forename VARCHAR(50),
     surname VARCHAR(50),
     dob DATE,
     nationality VARCHAR(20),
-    url VARCHAR(100)
+    url VARCHAR(100),
+
+    PRIMARY KEY(driverId)
 );
 
 -- Load data from CSV file into the table
 LOAD DATA LOCAL INFILE '/data/drivers.csv'
 INTO TABLE drivers
-FIELDS TERMINATED BY ',' 
+FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
+LINES TERMINATED BY '\r\n'
 IGNORE 1 ROWS;
-
+    
 CREATE TABLE IF NOT EXISTS pit_stops (
     raceId INT,
     driverId INT,
@@ -64,7 +68,7 @@ LOAD DATA LOCAL INFILE '/data/pit_stops.csv'
 INTO TABLE pit_stops
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
+LINES TERMINATED BY '\r\n'
 IGNORE 1 ROWS;
 
 
@@ -95,7 +99,7 @@ LOAD DATA LOCAL INFILE '/data/results.csv'
 INTO TABLE results
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
+LINES TERMINATED BY '\r\n'
 IGNORE 1 ROWS;
 
 -- Create the table if it doesn't exist
@@ -123,7 +127,7 @@ LOAD DATA LOCAL INFILE '/data/sprint_results.csv'
 INTO TABLE sprint_results
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
+LINES TERMINATED BY '\r\n'
 IGNORE 1 ROWS;
 
 
@@ -143,7 +147,7 @@ LOAD DATA LOCAL INFILE '/data/driver_standings.csv'
 INTO TABLE driver_standings
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
+LINES TERMINATED BY '\r\n'
 IGNORE 1 ROWS;
 
 -- Create the table if it doesn't exist
@@ -156,7 +160,8 @@ CREATE TABLE IF NOT EXISTS circuits (
     lat FLOAT,
     lng FLOAT,
     alt VARCHAR(10),
-    url VARCHAR(200)
+    url VARCHAR(200),
+    PRIMARY KEY(circuitId)
 );
 
 -- Load data from CSV file into the table
@@ -164,7 +169,7 @@ LOAD DATA LOCAL INFILE '/data/circuits.csv'
 INTO TABLE circuits
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
+LINES TERMINATED BY '\r\n'
 IGNORE 1 ROWS;
 
 -- Create the table if it doesn't exist
@@ -185,7 +190,7 @@ LOAD DATA LOCAL INFILE '/data/qualifying.csv'
 INTO TABLE qualifying
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
+LINES TERMINATED BY '\r\n'
 IGNORE 1 ROWS;
 
 
@@ -202,5 +207,5 @@ LOAD DATA LOCAL INFILE '/data/constructors.csv'
 INTO TABLE constructors
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
+LINES TERMINATED BY '\r\n'
 IGNORE 1 ROWS;

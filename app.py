@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, redirect, url_for, request
 import mysql.connector as mysql
 
 app = Flask(__name__ )
@@ -99,6 +99,7 @@ def drivers():
 
     return render_template('drivers.html', drivers=result, nationalities=nationalities)
 
+
 @app.route('/driver_stats')
 def driver_stats():
     # Query to get distinct drivers, their winning count, and total points
@@ -115,6 +116,69 @@ def driver_stats():
 
     return render_template('driver_stats.html', driver_stats=driver_stats)
 
+@app.route('/delete_driver/<int:driver_id>', methods=['POST'])
+def delete_driver(driver_id):
+    if request.method == 'POST':
+        # Perform deletion from the database
+        delete_query = "DELETE FROM drivers WHERE driverId = %s"
+        cursor.execute(delete_query, (driver_id,))
+        db.commit()
+
+        # Redirect to the drivers page or any other page as needed
+        return redirect(url_for('drivers'))
+
+@app.route('/add_driver', methods=['POST'])
+def add_driver():
+    if request.method == 'POST':
+        # Retrieve form data
+        driverId = request.form.get('driverId')
+        driverRef = request.form.get('driverRef')
+        number = request.form.get('number')
+        code = request.form.get('code')
+        forename = request.form.get('forename')
+        surname = request.form.get('surname')
+        dob = request.form.get('dob')
+        nationality = request.form.get('nationality')
+        url = request.form.get('url')
+
+        # Insert the new driver into the database
+        insert_query = """
+            INSERT INTO drivers (driverId, driverRef, number, code, forename, surname, dob, nationality, url)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        cursor.execute(insert_query, (driverId, driverRef, number, code, forename, surname, dob, nationality, url))
+        db.commit()
+
+        # Redirect to the drivers page or any other page as needed
+        return redirect(url_for('drivers'))
+
+@app.route('/edit_driver', methods=['POST'])
+def edit_driver():
+    if request.method == 'POST':
+        # Retrieve form data
+        driverId = request.form.get('driverId')
+        driverRef = request.form.get('driverRef')
+        number = request.form.get('number')
+        code = request.form.get('code')
+        forename = request.form.get('forename')
+        surname = request.form.get('surname')
+        dob = request.form.get('dob')
+        nationality = request.form.get('nationality')
+        url = request.form.get('url')
+
+        # Update the driver's information in the database
+        update_query = """
+            UPDATE drivers
+            SET driverRef = %s, number = %s, code = %s, forename = %s, surname = %s, dob = %s, nationality = %s, url = %s
+            WHERE driverId = %s
+        """
+        cursor.execute(update_query, (driverRef, number, code, forename, surname, dob, nationality, url, driverId))
+        db.commit()
+
+        # Redirect to the drivers page or any other page as needed
+        return redirect(url_for('drivers'))
+    
+            
 @app.route('/results')
 def results():
     
