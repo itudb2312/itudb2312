@@ -25,3 +25,11 @@
 - Added f1logo.png and updated the homepage.
 - Updated races and drivers pages to not display the ID values.
 - Included various css and html improvements to homepage.
+
+22.12.2023
+- Updated races.html and deleted unnecessary parts.
+- Updated drivers.html and added update and insert forms, deletion button and javascript codes for all of them
+- Updated home.html and deleted some unnecessary parts.
+- Updated app.py and wrote 3 new approutes which are add_driver, edit_driver and delete_driver to create insertion, update and deletion operations.
+- Updated the init.sql and fixed the enclosing issue by adding /r/n to line termination.
+- Updated init.sql and added PRIMARY KEY constraints and AUTO_INCREMENT to Primary keys on drivers and races tables.

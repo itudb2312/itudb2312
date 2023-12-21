@@ -38,7 +38,8 @@
                 </div>
             </div>           
         </div>
-        <h1>F1 - Races</h1>
+
+        <h1>Formula 1 Races</h1>
 
         <form method="post" action="{{ url_for('races') }}">
             <label for="selected_year">Select Year:</label>
@@ -230,7 +231,6 @@
                 <th>Quali Time</th>
                 <th>Sprint Date</th>
                 <th>Sprint Time</th>
-                <th>Edit</th>
                 <th>Delete</th>
             </tr>
             {% for race in races %}
@@ -253,13 +253,6 @@
                 <td>{{ race[17] }}</td>
                 <td>
                     <a
-                        href="javascript:void(0);"
-                        onclick="openEditModal(${result.id})"
-                        >Edit</a
-                    >
-                </td>
-                <td>
-                    <a
                         onclick="return confirm('Are you sure you want to delete this result?')"
                         >Delete</a
                     >
@@ -274,29 +267,9 @@
             function openAddModal() {
                 document.getElementById("addModal").style.display = "block";
             }
-
+        
             function closeAddModal() {
                 document.getElementById("addModal").style.display = "none";
-            }
-            // function openEditModal(id) {
-            //     // Populate the edit form with data from the selected row
-            //     // (you need to write this function based on your requirements)
-            //     populateEditForm(id);
-            //     document.getElementById("editForm").style.display = "block";
-            // }
-
-            function deleteResult() {
-                // Make an asynchronous request to delete the result
-                fetch("/delete_race/" + window.raceIdToDelete, {
-                    method: "DELETE",
-                }).then((response) => {
-                    if (response.ok) {
-                        // Reload the page or update the table after deletion
-                        window.location.reload();
-                    } else {
-                        console.error("Error deleting result");
-                    }
-                });
             }
         </script>
     </body>
