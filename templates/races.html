@@ -55,7 +55,9 @@
 
 
 
-        <button onclick="openAddModal()">Add New Race</button>
+        <div style="float: right; margin-top: -40px;">
+            <button onclick="openAddModal()">Add New Race</button>
+        </div>
 
         <!-- Add a hidden form for adding a new result -->
         <div id="addModal" class="modal">
@@ -240,7 +242,7 @@
                 <td>{{ race[4] }}</td>
                 <td>{{ race[5] }}</td>
                 <td>{{ race[6] }}</td>
-                <td>{{ race[7] }}</td>
+                <td><a class="clickable-link" href="{{ race[7] }}" target="_blank">{{ race[7] }}</a></td>
                 <td>{{ race[8] }}</td>
                 <td>{{ race[9] }}</td>
                 <td>{{ race[10] }}</td>

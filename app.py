@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request
 import mysql.connector as mysql
+import datetime
 
 app = Flask(__name__ )
 
@@ -99,6 +100,41 @@ def drivers():
 
     return render_template('drivers.html', drivers=result, nationalities=nationalities)
 
+@app.route('/about_driver/<int:driver_id>')
+def about_driver(driver_id):
+    # Query to get driver information, total points, races won, and race names
+    query = '''
+        SELECT
+            drivers.forename,
+            drivers.surname,
+            drivers.dob,
+            SUM(results.points) AS total_points,
+            COUNT(CASE WHEN results.positionOrder = 1 THEN 1 END) AS racewins,
+            AVG(results.points) AS avg_points,
+            GROUP_CONCAT(CASE WHEN results.positionOrder = 1 THEN races.name END) AS racewon
+        FROM
+            drivers
+        JOIN
+            results ON drivers.driverId = results.driverId
+        JOIN
+            races ON results.raceId = races.raceId
+        WHERE
+            drivers.driverId = %s
+        GROUP BY
+            drivers.forename,
+            drivers.surname,
+            drivers.dob;    
+    '''
+    cursor.execute(query, (driver_id,))
+    driver_info = cursor.fetchone()
+
+    # Calculate age based on date of birth
+    dob = driver_info[2]
+    today = datetime.date.today()
+    age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+
+    return render_template('about_driver.html', driver_info=driver_info, age=age)
+
 
 @app.route('/driver_stats')
 def driver_stats():
@@ -131,7 +167,6 @@ def delete_driver(driver_id):
 def add_driver():
     if request.method == 'POST':
         # Retrieve form data
-        driverId = request.form.get('driverId')
         driverRef = request.form.get('driverRef')
         number = request.form.get('number')
         code = request.form.get('code')
@@ -143,10 +178,10 @@ def add_driver():
 
         # Insert the new driver into the database
         insert_query = """
-            INSERT INTO drivers (driverId, driverRef, number, code, forename, surname, dob, nationality, url)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO drivers (driverRef, number, code, forename, surname, dob, nationality, url)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """
-        cursor.execute(insert_query, (driverId, driverRef, number, code, forename, surname, dob, nationality, url))
+        cursor.execute(insert_query, (driverRef, number, code, forename, surname, dob, nationality, url))
         db.commit()
 
         # Redirect to the drivers page or any other page as needed
