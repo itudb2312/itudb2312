@@ -38,6 +38,7 @@
 
     <div class="player-card">
         <h2>{{ driver_info[0] }} {{ driver_info[1] }}</h2>
+        <img id="driver-image" alt="{{ driver_info[0] }} {{ driver_info[1] }}" class="driver-image">
         <p>Age: {{ age }}</p>
     </div>
     <div class="player-card">
@@ -52,6 +53,47 @@
     <div class="player-card">
         <p>Races Won:</p>
         <p>{{ driver_info[6] }}</p>
-    </div>        
+    </div>
+    <script>
+        // Function to execute when search results are ready
+        function onSearchResultsReady(imageUrl) {
+            // Access the fetched image URL
+            console.log('Image URL:', imageUrl);
+
+            // Now you have the image URL, you can use it as needed
+            // For example, you can update an existing image element on your page
+            const driverImage = document.getElementById('driver-image');
+            driverImage.src = imageUrl;
+            driverImage.alt = '{{ driver_info[0] }} {{ driver_info[1] }}';
+        }
+
+        // Function to fetch the image URL based on the driver's name
+        function fetchDriverImage(driverName) {
+            const apiKey = 'AIzaSyC1R59MvSPtzWnrH0I0K5fYiCStLIKO-Tw';
+            const cx = '448215713cebf48f4'; // Your CSE ID
+
+            const apiUrl = `https://www.googleapis.com/customsearch/v1?q=${driverName}&key=${apiKey}&cx=${cx}&searchType=image`;
+
+            // Make a GET request to the CSE API
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    // Extract the first image URL from the search results
+                    const imageUrl = data.items && data.items.length > 0 ? data.items[0].link : null;
+
+                    // Call the function to handle the fetched image URL
+                    onSearchResultsReady(imageUrl);
+                })
+                .catch(error => {
+                    console.error('Error fetching driver image:', error);
+                });
+        }
+
+        // Execute customization when the page is loaded
+        window.addEventListener('load', function () {
+            const driverName = '{{ driver_info[0] }} {{ driver_info[1] }}'; // Concatenate first name and surname
+            fetchDriverImage(driverName);
+        });
+    </script>
 </body>
 </html>

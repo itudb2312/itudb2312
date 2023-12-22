@@ -83,15 +83,40 @@ def get_winner(race_id):
 @app.route('/drivers', methods=['GET', 'POST'])
 def drivers():
     if request.method == 'POST':
-        selected_nationality = request.form.get('selected_nationality')
-        if selected_nationality and selected_nationality != 'all':
-            select_query = f"SELECT * FROM drivers WHERE nationality = '{selected_nationality}'"
-        else:
-            select_query = "SELECT * FROM drivers"
-    else:
-        select_query = "SELECT * FROM drivers"
+        # Check if a search query is present
+        search_query = request.form.get('search_query', None)
+        
+        # Check if a nationality filter is present
+        selected_nationality = request.form.get('selected_nationality', 'all')
 
-    cursor.execute(select_query)
+        if search_query:
+            # If a search query is present, filter the drivers based on it
+            search_query = f"%{search_query}%"
+            select_query = """
+                SELECT * FROM drivers
+                WHERE driverRef LIKE %s
+                    OR number LIKE %s
+                    OR code LIKE %s
+                    OR forename LIKE %s
+                    OR surname LIKE %s
+                    OR dob LIKE %s
+                    OR nationality LIKE %s
+                    OR url LIKE %s
+            """
+            cursor.execute(select_query, (search_query, search_query, search_query, search_query, search_query, search_query, search_query, search_query))
+        elif selected_nationality and selected_nationality != 'all':
+            # If a nationality filter is present, filter the drivers based on it
+            select_query = f"SELECT * FROM drivers WHERE nationality = '{selected_nationality}'"
+            cursor.execute(select_query)
+        else:
+            # If no search query and no nationality filter, retrieve all drivers
+            select_query = "SELECT * FROM drivers"
+            cursor.execute(select_query)
+    else:
+        # Retrieve all drivers when no form is submitted
+        select_query = "SELECT * FROM drivers"
+        cursor.execute(select_query)
+
     result = cursor.fetchall()
 
     # Retrieve distinct nationalities for the dropdown menu
@@ -99,6 +124,7 @@ def drivers():
     nationalities = cursor.fetchall()
 
     return render_template('drivers.html', drivers=result, nationalities=nationalities)
+
 
 @app.route('/about_driver/<int:driver_id>')
 def about_driver(driver_id):
