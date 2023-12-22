@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>F1 - Race Results</title>
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static',filename='styles/style.css') }}"
+        />
+    </head>
+    <body>
+        <div class="topnav">
+            <a href="/">Home</a>
+            <div class="dropdown">
+                <button class="dropbtn">Races</button>
+                <div class="dropdown-content">
+                    <a href="/races">All Races</a>
+                    <a href="/who_won">Who Won</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <button class="dropbtn">Drivers</button>
+                <div class="dropdown-content">
+                    <a href="/drivers">All Drivers</a>
+                    <a href="/driver_stats">Driver Stats</a>
+                </div>
+            </div>
+            <a href="/results">Results</a>
+            <a href="/pit_stops">Pit Stops</a>
+            <a href="/driver_standings">Driver Standings</a>
+            <a href="/sprint_results">Sprint Results</a>
+            <div class="dropdown">
+                <button class="dropbtn">Qualifying And Circuit Data</button>
+                <div class="dropdown-content">
+                    <a href="/qualifying">Driver Qualifying Data</a>
+                    <a href="/circuits">All Circuits</a>
+                </div>
+            </div>
+        </div>
+
+        <h1>{{result[4]}}</h1>
+        <h2>{{result[1]}}</h2>
+
+        <button>Pit Stops</button>
+        <button>Results</button>
+        <button>Qualifying</button>
+    </body>
+</html>

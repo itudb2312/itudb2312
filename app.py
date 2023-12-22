@@ -115,12 +115,13 @@ def driver_stats():
 
     return render_template('driver_stats.html', driver_stats=driver_stats)
 
-@app.route('/results',methods=['GET', 'POST'])
-def results():
-    
+@app.route('/results', methods=['GET', 'POST'])
+@app.route('/results/<int:race_id>', methods=['GET', 'POST'])
+def get_results(race_id=None):
     if request.method == 'POST':
         year = request.form['year']
-        race = request.form['race']
+        race_name = request.form['race']
+
         select_query = f"""
         SELECT 
             res.positionOrder,
@@ -130,21 +131,57 @@ def results():
             res.points
         FROM 
             results res
-        JOIN ( SELECT raceId FROM races WHERE year = {year} AND name = "{race}") AS r ON res.raceId = r.raceId
+        JOIN (SELECT raceId FROM races WHERE year = {year} AND name = "{race_name}") AS r ON res.raceId = r.raceId
         JOIN drivers drv ON res.driverId = drv.driverId
         JOIN constructors con ON res.constructorId = con.constructorId
-        ORDER BY 
-            res.positionOrder ASC"""
+        ORDER BY res.positionOrder ASC"""
+        
         cursor.execute(select_query)
         result = cursor.fetchall()
+        race_info = [year,race_name]
+        
+        return render_template('results.html', results=result,race_info=race_info)
 
-        return render_template('results.html',results=result)
-
-    select_query = "SELECT * FROM results WHERE resultId < 100"
+    if race_id is not None:
+        print("BURDAA RACE ID VAR",race_id)
+        select_query = f""" SELECT 
+            res.positionOrder,
+            drv.number,
+            CONCAT(drv.forename, ' ', drv.surname) AS driver,
+            con.name AS constructor,
+            res.points,
+            r.year,
+            r.name
+        FROM 
+            results res
+        JOIN races r ON res.raceId = r.raceId
+        JOIN drivers drv ON res.driverId = drv.driverId
+        JOIN constructors con ON res.constructorId = con.constructorId
+        WHERE r.raceId = {race_id} 
+        ORDER BY res.positionOrder ASC
+        """
+        
+        cursor.execute(select_query)
+        result = cursor.fetchall()
+        race_info = [result[0][5],result[0][6]]
+        return render_template('results.html', results=result ,race_info=race_info)
+    
+    # GET isteği geldiğinde çalışacak olan kodlar
+    select_query = "SELECT * FROM results WHERE resultId < 100 LIMIT 0"
     cursor.execute(select_query)
     result = cursor.fetchall()
 
-    return render_template('results.html',results=result)
+    return render_template('results.html', results=result)
+
+
+@app.route('/race/<int:race_id>', methods=['GET','POST'])
+def race(race_id):
+
+    select_query = f"""SELECT * FROM races WHERE raceId = {race_id} LIMIT 1"""
+    cursor.execute(select_query)
+    result = cursor.fetchall()
+
+    return render_template('race_by_id.html',result=result[0])
 
 @app.route('/get_races', methods=['POST'])
 def get_races():

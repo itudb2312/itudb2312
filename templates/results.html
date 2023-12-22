@@ -55,7 +55,9 @@
             <input type="submit" value="Filter" />
         </form>
 
-        {% for result in results %}
+        {% if results != [] %}
+        <h2>{{ race_info[0]}} {{ race_info[1]}}</h2>
+        {% endif %} {% for result in results %}
         <div class="result">
             <div class="result_position">{{ result[0] }}</div>
             <div class="result_number">{{ result[1] }}</div>
@@ -68,12 +70,6 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
             $(document).ready(function () {
-                // Sayfa yüklendiğinde localStorage'dan son seçilen yarışı al ve checkbox'ı işaretle
-                var lastSelectedRace = localStorage.getItem("lastSelectedRace");
-                if (lastSelectedRace) {
-                    $("#race").val(lastSelectedRace);
-                }
-
                 $("#year").on("change", function () {
                     var selectedYear = $(this).val();
 
@@ -89,15 +85,6 @@
                             races.forEach(function (race) {
                                 raceSelect.append(
                                     $("<option></option>").text(race).val(race)
-                                );
-                            });
-
-                            // Yarış seçildiğinde localStorage'a kaydet
-                            raceSelect.on("change", function () {
-                                var selectedRace = $(this).val();
-                                localStorage.setItem(
-                                    "lastSelectedRace",
-                                    selectedRace
                                 );
                             });
                         },
