@@ -60,8 +60,6 @@
             // Access the fetched image URL
             console.log('Image URL:', imageUrl);
 
-            // Now you have the image URL, you can use it as needed
-            // For example, you can update an existing image element on your page
             const driverImage = document.getElementById('driver-image');
             driverImage.src = imageUrl;
             driverImage.alt = '{{ driver_info[0] }} {{ driver_info[1] }}';
@@ -69,8 +67,8 @@
 
         // Function to fetch the image URL based on the driver's name
         function fetchDriverImage(driverName) {
-            const apiKey = 'AIzaSyC1R59MvSPtzWnrH0I0K5fYiCStLIKO-Tw';
-            const cx = '448215713cebf48f4'; // Your CSE ID
+            const apiKey = 'AIzaSyD8cNWfcV5USglFg60KUA4ZUuXOSsVPFFw';
+            const cx = 'e57bd32fbc9c14060'; // Your CSE ID
 
             const apiUrl = `https://www.googleapis.com/customsearch/v1?q=${driverName}&key=${apiKey}&cx=${cx}&searchType=image`;
 
