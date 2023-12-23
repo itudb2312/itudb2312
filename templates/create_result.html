@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Create Result</title>
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static',filename='styles/style.css') }}"
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,300;1,500;1,600&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <div class="topnav">
+            <a href="/"
+                ><img
+                    src="{{ url_for('static', filename='styles/f1_logo.svg') }}"
+                    height="30"
+                    alt=""
+            /></a>
+            <div class="dropdown">
+                <button class="dropbtn">Races</button>
+                <div class="dropdown-content">
+                    <a href="/races">All Races</a>
+                    <a href="/who_won">Who Won</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <button class="dropbtn">Drivers</button>
+                <div class="dropdown-content">
+                    <a href="/drivers">All Drivers</a>
+                    <a href="/driver_stats">Driver Stats</a>
+                </div>
+            </div>
+            <a href="/results">Results</a>
+            <a href="/pit_stops">Pit Stops</a>
+            <a href="/driver_standings">Driver Standings</a>
+            <a href="/sprint_results">Sprint Results</a>
+            <div class="dropdown">
+                <button class="dropbtn">Qualifying And Circuit Data</button>
+                <div class="dropdown-content">
+                    <a href="/qualifying">Driver Qualifying Data</a>
+                    <a href="/circuits">All Circuits</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <h1>Create Result</h1>
+            <form action="/create_result" method="post">
+                <label for="result_id">Result ID:</label><br />
+                <input type="text" id="result_id" name="result_id" /><br />
+                <label for="race_id">Race ID:</label><br />
+                <input type="text" id="race_id" name="race_id" /><br />
+                <label for="driver_id">Driver ID:</label><br />
+                <input type="text" id="driver_id" name="driver_id" /><br />
+                <label for="constructor_id">Constructor ID:</label><br />
+                <input
+                    type="text"
+                    id="constructor_id"
+                    name="constructor_id"
+                /><br />
+                <label for="number">Number:</label><br />
+                <input type="text" id="number" name="number" /><br />
+                <label for="grid">Grid:</label><br />
+                <input type="text" id="grid" name="grid" /><br />
+                <label for="position">Position:</label><br />
+                <input type="text" id="position" name="position" /><br />
+                <label for="position_text">Position Text:</label><br />
+                <input
+                    type="text"
+                    id="position_text"
+                    name="position_text"
+                /><br />
+                <label for="position_order">Position Order:</label><br />
+                <input
+                    type="text"
+                    id="position_order"
+                    name="position_order"
+                /><br />
+                <label for="points">Points:</label><br />
+                <input type="text" id="points" name="points" /><br />
+                <label for="laps">Laps:</label><br />
+                <input type="text" id="laps" name="laps" /><br />
+                <label for="time">Time:</label><br />
+                <input type="text" id="time" name="time" /><br />
+                <label for="milliseconds">Milliseconds:</label><br />
+                <input
+                    type="text"
+                    id="milliseconds"
+                    name="milliseconds"
+                /><br />
+                <label for="fastest_lap">Fastest Lap:</label><br />
+                <input type="text" id="fastest_lap" name="fastest_lap" /><br />
+                <label for="rank">Rank:</label><br />
+                <input type="text" id="rank" name="rank" /><br />
+                <label for="fastest_lap_time">Fastest Lap Time:</label><br />
+                <input
+                    type="text"
+                    id="fastest_lap_time"
+                    name="fastest_lap_time"
+                /><br />
+                <label for="fastest_lap_speed">Fastest Lap Speed:</label><br />
+                <input
+                    type="text"
+                    id="fastest_lap_speed"
+                    name="fastest_lap_speed"
+                /><br />
+                <label for="status_id">Status ID:</label><br />
+                <input type="text" id="status_id" name="status_id" /><br />
+                <input type="submit" value="Submit" />
+            </form>
+        </div>
+    </body>
+</html>

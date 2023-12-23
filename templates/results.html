@@ -8,10 +8,184 @@
             rel="stylesheet"
             href="{{ url_for('static',filename='styles/style.css') }}"
         />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,300;1,500;1,600&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            .results_topbar {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            form label {
+                font-weight: bold;
+                margin-right: 10px;
+            }
+
+            form input {
+                background-color: #4caf50;
+                color: #ffffff;
+                padding: 10px 15px;
+                border: none;
+                cursor: pointer;
+                border: 1px solid #337e35;
+                border-radius: 4px;
+                font-size: 16px;
+            }
+
+            form input:hover {
+                background-color: #000000;
+                color: rgb(255, 255, 255);
+            }
+
+            form input:active {
+                background-color: #000000;
+                color: rgb(255, 255, 255);
+            }
+
+            form input:focus {
+                background-color: #000000;
+                color: rgb(255, 255, 255);
+            }
+
+            form select {
+                background-color: #efefef;
+                color: #000000;
+                padding: 10px 15px;
+                margin: 0px 10px;
+                border: none;
+                cursor: pointer;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                font-size: 16px;
+            }
+
+            form select:hover {
+                background-color: #dedede;
+            }
+
+            form select:active {
+                background-color: #396bea;
+            }
+
+            form select:focus {
+                background-color: #396bea;
+                color: white;
+            }
+
+            form input[type="text"] {
+                width: 100%;
+                padding: 10px;
+                margin: 5px 0;
+                box-sizing: border-box;
+            }
+
+            .result {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                margin-top: 20px;
+                font-size: 20px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                padding: 4px;
+            }
+
+            .result_position {
+                width: 3%;
+                text-align: center;
+                margin-right: 20px;
+                border: 1px solid #ddd;
+                border-radius: 2px;
+                padding: 10px;
+            }
+
+            .rp_winner {
+                background-color: #e6c42c;
+            }
+
+            .rp_second {
+                background-color: #9d9d9d;
+            }
+
+            .rp_third {
+                background-color: #cd7f32;
+            }
+
+            .result_number {
+                width: 10%;
+                margin-right: 20px;
+                padding: 10px;
+                font-style: italic;
+                font-weight: bold;
+                font-size: 24px;
+                font-family: "Gill Sans", "Gill Sans MT", Calibri,
+                    "Trebuchet MS", sans-serif;
+                text-align: center;
+            }
+
+            .result_driver {
+                width: 30%;
+                margin-right: 20px;
+                padding: 10px;
+            }
+
+            .result_constructor {
+                width: 30%;
+                margin-right: 20px;
+                padding: 10px;
+            }
+
+            .result_points {
+                width: 5%;
+                margin-right: 20px;
+                padding: 10px;
+            }
+
+            .results_topbar_right {
+                display: flex;
+                align-items: flex-end;
+                justify-content: center;
+                flex-direction: column;
+                gap: 50px;
+            }
+
+            .results_topbar_right_button {
+                color: #ffffff;
+                padding: 10px 15px;
+                border: none;
+                cursor: pointer;
+                border-radius: 4px;
+                font-size: 16px;
+                text-decoration: none;
+            }
+
+            .rtrb_create {
+                background-color: #4caf50;
+                border: 1px solid #337e35;
+                transition: 0.5s;
+            }
+
+            .rtrb_update {
+                background-color: #3b77d7;
+                border: 1px solid #2e60b1;
+            }
+        </style>
     </head>
     <body>
         <div class="topnav">
-            <a href="/">Home</a>
+            <a href="/"
+                ><img
+                    src="{{ url_for('static', filename='styles/f1_logo.svg') }}"
+                    height="30"
+                    alt=""
+            /></a>
             <div class="dropdown">
                 <button class="dropbtn">Races</button>
                 <div class="dropdown-content">
@@ -29,301 +203,99 @@
             <a href="/results">Results</a>
             <a href="/pit_stops">Pit Stops</a>
             <a href="/driver_standings">Driver Standings</a>
-            <a href="/sprint_results">Sprint Results</a>            
+            <a href="/sprint_results">Sprint Results</a>
             <div class="dropdown">
                 <button class="dropbtn">Qualifying And Circuit Data</button>
                 <div class="dropdown-content">
                     <a href="/qualifying">Driver Qualifying Data</a>
                     <a href="/circuits">All Circuits</a>
                 </div>
-            </div>           
-        </div>
-
-        <h1>F1 - Race Results</h1>
-
-        <button onclick="openAddModal()">Add New Result</button>
-
-        <!-- Add a hidden form for adding a new result -->
-        <div id="addModal" class="modal">
-            <div class="modal-content">
-                <form class="modal-form">
-                    <label for="race_id">Race ID:</label>
-                    <input
-                        type="text"
-                        name="race_id"
-                        placeholder="Enter Race ID"
-                        required
-                    />
-
-                    <label for="driver_id">Driver ID:</label>
-                    <input
-                        type="text"
-                        name="driver_id"
-                        placeholder="Enter Driver ID"
-                        required
-                    />
-
-                    <label for="constructor_id">Constructor ID:</label>
-                    <input
-                        type="text"
-                        name="constructor_id"
-                        placeholder="Enter Constructor ID"
-                        required
-                    />
-
-                    <label for="number">Number:</label>
-                    <input
-                        type="text"
-                        name="number"
-                        placeholder="Enter Number"
-                        required
-                    />
-
-                    <label for="grid">Grid:</label>
-                    <input
-                        type="text"
-                        name="grid"
-                        placeholder="Enter Grid"
-                        required
-                    />
-
-                    <label for="position">Position:</label>
-                    <input
-                        type="text"
-                        name="position"
-                        placeholder="Enter Position"
-                        required
-                    />
-
-                    <label for="position_text">Position Text:</label>
-                    <input
-                        type="text"
-                        name="position_text"
-                        placeholder="Enter Position Text"
-                        required
-                    />
-
-                    <label for="position_order">Position Order:</label>
-                    <input
-                        type="text"
-                        name="position_order"
-                        placeholder="Enter Position Order"
-                        required
-                    />
-
-                    <label for="points">Points:</label>
-                    <input
-                        type="text"
-                        name="points"
-                        placeholder="Enter Points"
-                        required
-                    />
-
-                    <label for="laps">Laps:</label>
-                    <input
-                        type="text"
-                        name="laps"
-                        placeholder="Enter Laps"
-                        required
-                    />
-
-                    <label for="time">Time:</label>
-                    <input
-                        type="text"
-                        name="time"
-                        placeholder="Enter Time"
-                        required
-                    />
-
-                    <label for="milliseconds">Milliseconds:</label>
-                    <input
-                        type="text"
-                        name="milliseconds"
-                        placeholder="Enter Milliseconds"
-                        required
-                    />
-
-                    <label for="fastest_lap">Fastest Lap:</label>
-                    <input
-                        type="text"
-                        name="fastest_lap"
-                        placeholder="Enter Fastest Lap"
-                        required
-                    />
-
-                    <label for="rank">Rank:</label>
-                    <input
-                        type="text"
-                        name="rank"
-                        placeholder="Enter Rank"
-                        required
-                    />
-
-                    <label for="fastest_lap_time">Fastest Lap Time:</label>
-                    <input
-                        type="text"
-                        name="fastest_lap_time"
-                        placeholder="Enter Fastest Lap Time"
-                        required
-                    />
-
-                    <label for="fastest_lap_speed">Fastest Lap Speed:</label>
-                    <input
-                        type="text"
-                        name="fastest_lap_speed"
-                        placeholder="Enter Fastest Lap Speed"
-                        required
-                    />
-
-                    <label for="status_id">Status ID:</label>
-                    <input
-                        type="text"
-                        name="status_id"
-                        placeholder="Enter Status ID"
-                        required
-                    />
-
-                    <button type="submit">Add Result</button>
-                    <button type="button" onclick="closeAddModal()">
-                        Cancel
-                    </button>
-                </form>
             </div>
         </div>
 
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Race ID</th>
-                <th>Driver ID</th>
-                <th>Constructor ID</th>
-                <th>Number</th>
-                <th>Grid</th>
-                <th>Position</th>
-                <th>Position Text</th>
-                <th>Position Order</th>
-                <th>Points</th>
-                <th>Laps</th>
-                <th>Time</th>
-                <th>Milliseconds</th>
-                <th>Fastest Lap</th>
-                <th>Rank</th>
-                <th>Fastest Lap Time</th>
-                <th>Fastest Lap Speed</th>
-                <th>Status ID</th>
-                <th>Edit</th>
-                <th>Delete</th>
-            </tr>
-            {% for result in results %}
-            <tr>
-                <td>{{ result[0] }}</td>
-                <td>{{ result[1] }}</td>
-                <td>{{ result[2] }}</td>
-                <td>{{ result[3] }}</td>
-                <td>{{ result[4] }}</td>
-                <td>{{ result[5] }}</td>
-                <td>{{ result[6] }}</td>
-                <td>{{ result[7] }}</td>
-                <td>{{ result[8] }}</td>
-                <td>{{ result[9] }}</td>
-                <td>{{ result[10] }}</td>
-                <td>{{ result[11] }}</td>
-                <td>{{ result[12] }}</td>
-                <td>{{ result[13] }}</td>
-                <td>{{ result[14] }}</td>
-                <td>{{ result[15] }}</td>
-                <td>{{ result[16] }}</td>
-                <td>{{ result[17] }}</td>
-                <td>
-                    <a
-                        href="javascript:void(0);"
-                        onclick="openEditModal(${result.id})"
-                        >Edit</a
-                    >
-                </td>
-                <td>
-                    <a
-                        onclick="return confirm('Are you sure you want to delete this result?')"
-                        >Delete</a
-                    >
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
+        <div class="content">
+            <div class="results_topbar">
+                <h1 style="font-size: xxx-large">Race Results</h1>
 
-        <!-- ... (JavaScript code for modals) -->
+                <div class="results_topbar_right">
+                    <div class="results_topbar_right_buttons">
+                        <a
+                            class="results_topbar_right_button rtrb_create"
+                            href="{{ url_for('create_result') }}"
+                            >Create New Race Result</a
+                        >
+                    </div>
 
+                    <form method="POST" action="">
+                        <label for="year">Yıl:</label>
+                        <select id="year" name="year">
+                            {% for year in range(1950, 2024) %}
+                            <option value="{{ year }}">{{ year }}</option>
+                            {% endfor %}
+                        </select>
+
+                        <label for="race">Yarış İsmi:</label>
+                        <select id="race" name="race"></select>
+
+                        <input type="submit" value="Filter" />
+                    </form>
+                </div>
+            </div>
+
+            {% if results != [] %}
+            <h2 style="font-size: xx-large">
+                {{ race_info[0]}} {{ race_info[1]}}
+            </h2>
+            {% endif %} {%if results == [] %}
+            <h2 style="font-size: xx-large">No Race Result Data Found</h2>
+            {%else%} {% for result in results %}
+            <div class="result">
+                {% if result[0] == 1 %}
+                <div class="result_position rp_winner">{{ result[0] }}</div>
+                {% elif result[0] == 2 %}
+                <div class="result_position rp_second">{{ result[0] }}</div>
+                {% elif result[0] == 3 %}
+                <div class="result_position rp_third">{{ result[0] }}</div>
+                {% else %}
+                <div class="result_position">{{ result[0] }}</div>
+                {% endif %} {% if result[1] == None %}
+                <div class="result_number">-</div>
+                {% else %}
+                <div class="result_number">{{ result[1] }}</div>
+                {% endif %}
+                <div class="result_driver">{{ result[2] }}</div>
+                <div class="result_constructor">{{ result[3] }}</div>
+                <div class="result_points">{{ result[4] }}</div>
+                <a href="" class="result_btn result_btn_edit">Edit</a>
+                <a href="" class="result_btn result_btn_delete">Delete</a>
+            </div>
+            {% endfor %} {%endif%}
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
-            function openAddModal() {
-                document.getElementById("addModal").style.display = "block";
-            }
+            $(document).ready(function () {
+                $("#year").on("change", function () {
+                    var selectedYear = $(this).val();
 
-            function closeAddModal() {
-                document.getElementById("addModal").style.display = "none";
-            }
-            // function openEditModal(id) {
-            //     // Populate the edit form with data from the selected row
-            //     // (you need to write this function based on your requirements)
-            //     populateEditForm(id);
-            //     document.getElementById("editForm").style.display = "block";
-            // }
+                    $.ajax({
+                        type: "POST",
+                        url: "/get_races",
+                        data: { year: selectedYear },
+                        success: function (response) {
+                            var races = response.races;
+                            var raceSelect = $("#race");
+                            raceSelect.empty();
 
-            function deleteResult() {
-                // Make an asynchronous request to delete the result
-                fetch("/delete_result/" + window.resultIdToDelete, {
-                    method: "DELETE",
-                }).then((response) => {
-                    if (response.ok) {
-                        // Reload the page or update the table after deletion
-                        window.location.reload();
-                    } else {
-                        console.error("Error deleting result");
-                    }
+                            races.forEach(function (race) {
+                                raceSelect.append(
+                                    $("<option></option>").text(race).val(race)
+                                );
+                            });
+                        },
+                    });
                 });
-            }
-
-            // function populateEditForm(id) {
-            //     // Fetch the data for the selected ID
-            //     fetch(`/get_result_data/${id}`) // Bu endpoint'i, verileri getirecek bir endpoint ile değiştirmeniz gerekebilir
-            //         .then((response) => response.json())
-            //         .then((data) => {
-            //             // Set values for the form fields based on the retrieved data
-            //             document.getElementById("editId").value = data.id;
-            //             document.getElementById("editRaceId").value =
-            //                 data.raceId;
-            //             document.getElementById("editDriverId").value =
-            //                 data.driverId;
-            //             document.getElementById("editConstructorId").value =
-            //                 data.constructorId;
-            //             document.getElementById("editNumber").value =
-            //                 data.number;
-            //             document.getElementById("editGrid").value = data.grid;
-            //             document.getElementById("editPosition").value =
-            //                 data.position;
-            //             document.getElementById("editPositionText").value =
-            //                 data.positionText;
-            //             document.getElementById("editPositionOrder").value =
-            //                 data.positionOrder;
-            //             document.getElementById("editPoints").value =
-            //                 data.points;
-            //             document.getElementById("editLaps").value = data.laps;
-            //             document.getElementById("editTime").value = data.time;
-            //             document.getElementById("editMilliseconds").value =
-            //                 data.milliseconds;
-            //             document.getElementById("editFastestLap").value =
-            //                 data.fastestLap;
-            //             document.getElementById("editRank").value = data.rank;
-            //             document.getElementById("editFastestLapTime").value =
-            //                 data.fastestLapTime;
-            //             document.getElementById("editFastestLapSpeed").value =
-            //                 data.fastestLapSpeed;
-            //             document.getElementById("editStatusId").value =
-            //                 data.statusId;
-            //         })
-            //         .catch((error) =>
-            //             console.error("Error fetching result data:", error)
-            //         );
-            // }
+            });
         </script>
     </body>
 </html>

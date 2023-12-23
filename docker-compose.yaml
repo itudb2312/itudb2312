@@ -2,6 +2,7 @@ version: "3.9"
 services:
   mysql:
     restart: always
+    platform: linux/x86_64
     container_name: "mysql"
     image: mysql:5.7
     ports:
