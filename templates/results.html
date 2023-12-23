@@ -246,7 +246,9 @@
             <h2 style="font-size: xx-large">
                 {{ race_info[0]}} {{ race_info[1]}}
             </h2>
-            {% endif %} {% for result in results %}
+            {% endif %} {%if results == [] %}
+            <h2 style="font-size: xx-large">No Race Result Data Found</h2>
+            {%else%} {% for result in results %}
             <div class="result">
                 {% if result[0] == 1 %}
                 <div class="result_position rp_winner">{{ result[0] }}</div>
@@ -267,7 +269,7 @@
                 <a href="" class="result_btn result_btn_edit">Edit</a>
                 <a href="" class="result_btn result_btn_delete">Delete</a>
             </div>
-            {% endfor %}
+            {% endfor %} {%endif%}
         </div>
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

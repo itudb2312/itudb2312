@@ -114,9 +114,13 @@
             </div>
         </div>
         <div class="race_buttons">
-            <a href="/results/{{ result[0] }}" class="race_button">Results</a>
+            <a href="/race/{{ result[0] }}/results" class="race_button"
+                >Results</a
+            >
             <a href="" class="race_button">Qualifying</a>
-            <a href="" class="race_button">Pit Stops</a>
+            <a href="/race/{{ result[0] }}/pit_stops" class="race_button"
+                >Pit Stops</a
+            >
         </div>
     </body>
 </html>

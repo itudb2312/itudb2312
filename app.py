@@ -116,7 +116,7 @@ def driver_stats():
     return render_template('driver_stats.html', driver_stats=driver_stats)
 
 @app.route('/results', methods=['GET', 'POST'])
-@app.route('/results/<int:race_id>', methods=['GET', 'POST'])
+@app.route('/race/<int:race_id>/results/', methods=['GET', 'POST'])
 def get_results(race_id=None):
     if request.method == 'POST':
         year = request.form['year']
@@ -143,7 +143,6 @@ def get_results(race_id=None):
         return render_template('results.html', results=result,race_info=race_info)
 
     if race_id is not None:
-        print("BURDAA RACE ID VAR",race_id)
         select_query = f""" SELECT 
             res.positionOrder,
             drv.number,
@@ -206,7 +205,7 @@ def create_result():
     return render_template('create_result.html')
     
 
-@app.route('/race/<int:race_id>', methods=['GET','POST'])
+@app.route('/race/<int:race_id>/', methods=['GET','POST'])
 def race(race_id):
     select_query = f"""SELECT * FROM races WHERE raceId = {race_id} LIMIT 1"""
     cursor.execute(select_query)
@@ -226,13 +225,73 @@ def get_races():
     result = cursor.fetchall()
     return jsonify({'races': result})
 
-@app.route('/pit_stops')
-def pit_stops():
-    select_query = "SELECT * FROM pit_stops"
+@app.route('/pit_stops/',methods=['GET','POST'])
+@app.route('/race/<int:race_id>/pit_stops/', methods=['GET', 'POST'])
+def pit_stops(race_id=None):
+    if request.method == 'POST':
+        year = request.form['year']
+        race_name = request.form['race']
+
+        select_query = f"""SELECT
+        CONCAT(d.forename, ' ', d.surname) AS driver,
+        p.stop,
+        p.lap,
+        p.time,
+        p.duration,
+        p.milliseconds
+        FROM pit_stops p
+        JOIN drivers d ON p.driverId = d.driverId
+        JOIN races r ON p.raceId = r.raceId
+        WHERE  (r.name = "{race_name}" AND r.year = {year})
+        ORDER BY p.milliseconds ASC
+        """
+        cursor.execute(select_query)
+        result = cursor.fetchall()
+        race_info = [year,race_name]
+        
+        return render_template('pit_stops.html', pit_stops=result,race_info=race_info)
+
+
+    if race_id is not None:
+        select_query = f"""SELECT
+        CONCAT(d.forename, ' ', d.surname) AS driver,
+        p.stop,
+        p.lap,
+        p.time,
+        p.duration,
+        p.milliseconds,
+        r.year,
+        r.name
+        FROM pit_stops p
+        JOIN drivers d ON p.driverId = d.driverId
+        JOIN races r ON p.raceId = r.raceId
+        WHERE p.raceId = {race_id}
+        ORDER BY p.duration ASC
+        """
+        
+        cursor.execute(select_query)
+        result = cursor.fetchall()
+        if result != []:
+            race_info = [result[0][6],result[0][7]]
+        else:  
+            race_info = []
+        return render_template('pit_stops.html', pit_stops=result ,race_info=race_info)
+
+    select_query = """SELECT
+    CONCAT(d.forename, ' ', d.surname) AS driver,
+    p.stop,
+    p.lap,
+    p.time,
+    p.duration,
+    p.milliseconds
+    FROM pit_stops p
+    JOIN drivers d ON p.driverId = d.driverId LIMIT 0
+    """
     cursor.execute(select_query)
     result = cursor.fetchall()
+    race_info = []
 
-    return render_template('pit_stops.html',pit_stops=result)
+    return render_template('pit_stops.html',pit_stops=result,race_info=race_info)
 
 @app.route('/driver_standings')
 def driver_standings():

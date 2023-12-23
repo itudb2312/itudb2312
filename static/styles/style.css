@@ -152,6 +152,19 @@ th {
     transition: 0.5s;
 }
 
+.pitstop_btn {
+    text-align: center;
+    background-color: #ebebeb;
+    color: #c7c7c7;
+    padding: 10px 15px;
+    border: none;
+    font-size: 12px;
+    border-radius: 2px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: 0.5s;
+}
+
 .result_btn_edit:hover {
     background-color: #3b77d7;
     color: #fff;
