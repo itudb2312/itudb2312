@@ -71,55 +71,55 @@
                 <form class = "modal-form" id="addRaceForm" method="post" action="{{ url_for('add_race') }}">
 
                     <label for="year">Year:</label>
-                    <input type="text" name="year" placeholder="Enter Year" required/>
+                    <input type="number" name="year" placeholder="Enter Year" required/>
 
                     <label for="round">Round:</label>
-                    <input type="text" name="round" placeholder="Enter Round" required/>
+                    <input type="number" name="round" placeholder="Enter Round" required/>
 
                     <label for="circuitId">Circuit ID:</label>
-                    <input type="text" name="circuitId" placeholder="Enter circuit Id" required/>
+                    <input type="number" name="circuitId" placeholder="Enter circuit Id" required/>
 
                     <label for="name">Name:</label>
                     <input type="text" name="name" placeholder="Enter name" required/>
 
                     <label for="date">Date:</label>
-                    <input type="text" name="date" placeholder="Enter date" required/>
+                    <input type="date" name="date" placeholder="Enter date" required/>
 
                     <label for="time">Time:</label>
-                    <input type="text" name="time" placeholder="Enter time" required/>
+                    <input type="text" name="time" placeholder="Enter time: Ex: 0:00:00" required/>
 
                     <label for="url">URL:</label>
                     <input type="text" name="url" placeholder="Enter URL" required/>
 
                     <label for="fp1_date">FP1 Date:</label>
-                    <input type="text" name="fp1_date" placeholder="Enter fp1 date" required/>
+                    <input type="date" name="fp1_date" placeholder="Enter fp1 date" required/>
 
                     <label for="fp1_time">FP1 Time:</label>
-                    <input type="text" name="fp1_time" placeholder="Enter fp1 time" required/>
+                    <input type="text" name="fp1_time" placeholder="Enter fp1 time: Ex: 0:00:00" required/>
 
                     <label for="fp2_date">FP2 Date:</label>
-                    <input type="text" name="fp2_date" placeholder="Enter fp2 date" required/>
+                    <input type="date" name="fp2_date" placeholder="Enter fp2 date" required/>
 
                     <label for="fp2_time">FP2 Time:</label>
-                    <input type="text" name="fp2_time" placeholder="Enter fp2 time" required/>
+                    <input type="text" name="fp2_time" placeholder="Enter fp2 time: Ex: 0:00:00" required/>
 
                     <label for="fp3_date">FP3 Date:</label>
-                    <input type="text" name="fp3_date" placeholder="Enter fp3 date" required/>
+                    <input type="date" name="fp3_date" placeholder="Enter fp3 date" required/>
 
                     <label for="fp3_time">FP3 Time:</label>
-                    <input type="text" name="fp3_time" placeholder="Enter fp3 time" required/>
+                    <input type="text" name="fp3_time" placeholder="Enter fp3 time: Ex: 0:00:00" required/>
 
                     <label for="quali_date">Quali Date:</label>
-                    <input type="text" name="quali_date" placeholder="Enter quali date" required/>
+                    <input type="date" name="quali_date" placeholder="Enter quali date" required/>
 
                     <label for="quali_time">Quali Time:</label>
-                    <input type="text" name="quali_time" placeholder="Enter quali time" required/>
+                    <input type="text" name="quali_time" placeholder="Enter quali time: Ex: 0:00:00" required/>
 
                     <label for="sprint_date">Sprint Date:</label>
-                    <input type="text" name="sprint_date" placeholder="Enter sprint date" required/>
+                    <input type="date" name="sprint_date" placeholder="Enter sprint date" required/>
 
                     <label for="sprint_time">Sprint Time:</label>
-                    <input type="text" name="sprint_time" placeholder="Enter sprint time" required/>
+                    <input type="text" name="sprint_time" placeholder="Enter sprint time: Ex: 0:00:00" required/>
 
                     <button type="submit">Add Race</button>
                     <button type="button" onclick="closeAddModal()">Cancel</button>
@@ -133,56 +133,56 @@
             <div class="modal-content" id="editRaceForm">
                 <form class="modal-form" method="post" action="{{ url_for('edit_race') }}">
                     <label for="raceId">Race ID:</label>
-                    <input type="text" name="raceId" id="raceId" required readonly/>
+                    <input type="number" name="raceId" id="raceId" required readonly/>
                     
                     <label for="year">Year:</label>
-                    <input type="text" name="year" id="year" required/>
+                    <input type="number" name="year" id="year" required/>
 
                     <label for="round">Round:</label>
-                    <input type="text" name="round" id="round" required/>
+                    <input type="number" name="round" id="round" required/>
 
                     <label for="circuitId">Circuit ID:</label>
-                    <input type="text" name="circuitId" id="circuitId" required/>
+                    <input type="number" name="circuitId" id="circuitId" required/>
 
                     <label for="name">Name:</label>
                     <input type="text" name="name" id="name" required/>
 
                     <label for="date">Date:</label>
-                    <input type="text" name="date" id="date" required/>
+                    <input type="date" name="date" id="date" required/>
 
                     <label for="time">Time:</label>
-                    <input type="text" name="time" id="time" required/>
+                    <input type="time" name="time" id="time" required/>
 
 
                     <label for="url">URL:</label>
                     <input type="text" name="url" id="url" required/>
 
                     <label for="fp1_date">FP1 Date:</label>
-                    <input type="text" name="fp1_date" id="fp1_date" required/>
+                    <input type="date" name="fp1_date" id="fp1_date" required/>
 
                     <label for="fp1_time">FP1 Time:</label>
                     <input type="text" name="fp1_time" id="fp1_time" required/>
 
                     <label for="fp2_date">FP2 Date:</label>
-                    <input type="text" name="fp2_date" id="fp2_date" required/>
+                    <input type="date" name="fp2_date" id="fp2_date" required/>
 
                     <label for="fp2_time">FP2 Time:</label>
                     <input type="text" name="fp2_time" id="fp2_time" required/>
 
                     <label for="fp3_date">FP3 Date:</label>
-                    <input type="text" name="fp3_date" id="fp3_date" required/>
+                    <input type="date" name="fp3_date" id="fp3_date" required/>
 
                     <label for="fp3_time">FP3 Time:</label>
                     <input type="text" name="fp3_time" id="fp3_time" required/>
 
                     <label for="quali_date">Quali Date:</label>
-                    <input type="text" name="quali_date" id="quali_date" required/>
+                    <input type="date" name="quali_date" id="quali_date" required/>
 
                     <label for="quali_time">Quali Time:</label>
                     <input type="text" name="quali_time" id="quali_time" required/>
 
                     <label for="sprint_date">Sprint Date:</label>
-                    <input type="text" name="sprint_date" id="sprint_date" required/>
+                    <input type="date" name="sprint_date" id="sprint_date" required/>
 
                     <label for="sprint_time">Sprint Time:</label>
                     <input type="text" name="sprint_time" id="sprint_time" required/>

@@ -74,7 +74,7 @@
                     <input type="text" name="driverRef" placeholder="Enter Driver Reference" required/>
 
                     <label for="number">Number:</label>
-                    <input type="text" name="number" placeholder="Enter Number" required/>
+                    <input type="number" name="number" placeholder="Enter Number" required/>
 
                     <label for="code">Code:</label>
                     <input type="text" name="code" placeholder="Enter Code" required/>
@@ -86,7 +86,7 @@
                     <input type="text" name="surname" placeholder="Enter Surname" required/>
 
                     <label for="dob">Date of Birth:</label>
-                    <input type="text" name="dob" placeholder="Enter Date of Birth" required/>
+                    <input type="date" name="dob" placeholder="Enter Date of Birth" required/>
 
                     <label for="nationality">Nationality:</label>
                     <input type="text" name="nationality" placeholder="Enter Nationality" required/>
@@ -106,13 +106,13 @@
             <div class="modal-content" id="editDriverForm">
                 <form class="modal-form" method="post" action="{{ url_for('edit_driver') }}">
                     <label for="driverId">Driver ID:</label>
-                    <input type="text" name="driverId" id="driverId" required readonly/>
+                    <input type="number" name="driverId" id="driverId" required readonly/>
 
                     <label for="driverRef">Driver Reference:</label>
                     <input type="text" name="driverRef" id="driverRef" required/>
 
                     <label for="number">Number:</label>
-                    <input type="text" name="number" id="number" required/>
+                    <input type="number" name="number" id="number" required/>
 
                     <label for="code">Code:</label>
                     <input type="text" name="code" id="code" required/>
@@ -124,7 +124,7 @@
                     <input type="text" name="surname" id="surname" required/>
 
                     <label for="dob">Date of Birth:</label>
-                    <input type="text" name="dob" id="dob" required/>
+                    <input type="date" name="dob" id="dob" required/>
 
                     <label for="nationality">Nationality:</label>
                     <input type="text" name="nationality" id="nationality" required/>
