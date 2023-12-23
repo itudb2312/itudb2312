@@ -1,7 +1,70 @@
 USE mysql;
 
+CREATE TABLE IF NOT EXISTS drivers (
+    driverId INT AUTO_INCREMENT,
+    driverRef VARCHAR(20),
+    number INT,
+    code CHAR(3),
+    forename VARCHAR(50),
+    surname VARCHAR(50),
+    dob DATE,
+    nationality VARCHAR(20),
+    url VARCHAR(100),
+
+    PRIMARY KEY(driverId)
+);
+
+
+-- Load data from CSV file into the table
+LOAD DATA LOCAL INFILE '/data/drivers.csv'
+INTO TABLE drivers
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\r\n'
+IGNORE 1 ROWS;
+
+-- Create the table if it doesn't exist
+CREATE TABLE IF NOT EXISTS circuits (
+    circuitId INT AUTO_INCREMENT,
+    circuitRef VARCHAR(10),
+    name VARCHAR(10),
+    location VARCHAR(10),
+    country VARCHAR(10),
+    lat FLOAT,
+    lng FLOAT,
+    alt VARCHAR(10),
+    url VARCHAR(200),
+    PRIMARY KEY(circuitId)
+);
+
+-- Load data from CSV file into the table
+LOAD DATA LOCAL INFILE '/data/circuits.csv'
+INTO TABLE circuits
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\r\n'
+IGNORE 1 ROWS;
+
+CREATE TABLE IF NOT EXISTS constructors (
+    constructorId INT AUTO_INCREMENT,
+    constructorRef VARCHAR(30),
+    name VARCHAR(20),
+    nationality VARCHAR(20),
+    url VARCHAR(100),
+
+    PRIMARY KEY(constructorId)
+);
+
+-- Load data from CSV file into the table
+LOAD DATA LOCAL INFILE '/data/constructors.csv'
+INTO TABLE constructors
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\r\n'
+IGNORE 1 ROWS;
+
 CREATE TABLE IF NOT EXISTS races (
-    raceId INT,
+    raceId INT AUTO_INCREMENT,
     year INT,
     round INT,
     circuitId INT,
@@ -18,7 +81,10 @@ CREATE TABLE IF NOT EXISTS races (
     quali_date DATE,
     quali_time TIME,   
     sprint_date DATE,
-    sprint_time TIME
+    sprint_time TIME,
+
+    PRIMARY KEY(raceId),
+    FOREIGN KEY (circuitId) REFERENCES circuits(circuitId) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 -- Load data from CSV file into the table
@@ -26,28 +92,9 @@ LOAD DATA LOCAL INFILE '/data/races.csv'
 INTO TABLE races
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
+LINES TERMINATED BY '\r\n'
 IGNORE 1 ROWS;
-
-CREATE TABLE IF NOT EXISTS drivers (
-    driverId INT,
-    drivrRef VARCHAR(20),
-    number INT,
-    code CHAR(3),
-    forename VARCHAR(50),
-    surname VARCHAR(50),
-    dob DATE,
-    nationality VARCHAR(20),
-    url VARCHAR(100)
-);
-
--- Load data from CSV file into the table
-LOAD DATA LOCAL INFILE '/data/drivers.csv'
-INTO TABLE drivers
-FIELDS TERMINATED BY ',' 
-ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
-IGNORE 1 ROWS;
+    
 
 CREATE TABLE IF NOT EXISTS pit_stops (
     raceId INT,
@@ -56,7 +103,10 @@ CREATE TABLE IF NOT EXISTS pit_stops (
     lap INT,
     time TIME,
     duration VARCHAR(10),
-    milliseconds INT
+    milliseconds INT,
+
+    FOREIGN KEY (raceId) REFERENCES races(raceId) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (driverId) REFERENCES drivers(driverId) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 -- Load data from CSV file into the table
@@ -64,13 +114,13 @@ LOAD DATA LOCAL INFILE '/data/pit_stops.csv'
 INTO TABLE pit_stops
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
+LINES TERMINATED BY '\r\n'
 IGNORE 1 ROWS;
 
 
 -- Create the table if it doesn't exist
 CREATE TABLE IF NOT EXISTS results (
-    resultId INT,
+    resultId INT AUTO_INCREMENT,
     raceId INT,
     driverId INT,
     constructorId INT,
@@ -87,7 +137,12 @@ CREATE TABLE IF NOT EXISTS results (
     rank INT,
     fastestLapTime VARCHAR(10),
     fastestLapSpeed VARCHAR(10),
-    statusId INT
+    statusId INT,
+
+    PRIMARY KEY(resultId),
+    FOREIGN KEY (raceId) REFERENCES races(raceId) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (driverId) REFERENCES drivers(driverId) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (constructorId) REFERENCES constructors(constructorId) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 -- Load data from CSV file into the table
@@ -95,12 +150,12 @@ LOAD DATA LOCAL INFILE '/data/results.csv'
 INTO TABLE results
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
+LINES TERMINATED BY '\r\n'
 IGNORE 1 ROWS;
 
 -- Create the table if it doesn't exist
 CREATE TABLE IF NOT EXISTS sprint_results (
-    resultId INT,
+    resultId INT AUTO_INCREMENT,
     raceId INT,
     driverId INT,
     constructorId INT,
@@ -115,7 +170,12 @@ CREATE TABLE IF NOT EXISTS sprint_results (
     milliseconds INT,
     fastestLap INT,
     fastestLapTime VARCHAR(10),
-    statusId INT
+    statusId INT,
+
+    PRIMARY KEY(resultId),
+    FOREIGN KEY (raceId) REFERENCES races(raceId) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (driverId) REFERENCES drivers(driverId) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (constructorId) REFERENCES constructors(constructorId) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 -- Load data from CSV file into the table
@@ -123,19 +183,23 @@ LOAD DATA LOCAL INFILE '/data/sprint_results.csv'
 INTO TABLE sprint_results
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
+LINES TERMINATED BY '\r\n'
 IGNORE 1 ROWS;
 
 
 -- Create the table if it doesn't exist
 CREATE TABLE IF NOT EXISTS driver_standings (
-    driverStandingsId INT,
+    driverStandingsId INT AUTO_INCREMENT,
     raceId INT,
     driverId INT,
     points INT,
     position INT,
     positionText VARCHAR(10),
-    wins INT
+    wins INT,
+
+    PRIMARY KEY(driverStandingsId),
+    FOREIGN KEY (raceId) REFERENCES races(raceId) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (driverId) REFERENCES drivers(driverId) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 -- Load data from CSV file into the table
@@ -143,29 +207,10 @@ LOAD DATA LOCAL INFILE '/data/driver_standings.csv'
 INTO TABLE driver_standings
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
+LINES TERMINATED BY '\r\n'
 IGNORE 1 ROWS;
 
--- Create the table if it doesn't exist
-CREATE TABLE IF NOT EXISTS circuits (
-    circuitId INT,
-    circuitRef VARCHAR(10),
-    name VARCHAR(10),
-    location VARCHAR(10),
-    country VARCHAR(10),
-    lat FLOAT,
-    lng FLOAT,
-    alt VARCHAR(10),
-    url VARCHAR(200)
-);
 
--- Load data from CSV file into the table
-LOAD DATA LOCAL INFILE '/data/circuits.csv'
-INTO TABLE circuits
-FIELDS TERMINATED BY ','
-ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
-IGNORE 1 ROWS;
 
 -- Create the table if it doesn't exist
 CREATE TABLE IF NOT EXISTS qualifying (
@@ -177,7 +222,12 @@ CREATE TABLE IF NOT EXISTS qualifying (
     position INT,
     q1 TIME,
     q2 TIME,
-    q3 TIME
+    q3 TIME,
+
+    PRIMARY KEY(qualifyId),
+    FOREIGN KEY (raceId) REFERENCES races(raceId) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (driverId) REFERENCES drivers(driverId) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (constructorId) REFERENCES constructors(constructorId) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 -- Load data from CSV file into the table
@@ -185,22 +235,10 @@ LOAD DATA LOCAL INFILE '/data/qualifying.csv'
 INTO TABLE qualifying
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
+LINES TERMINATED BY '\r\n'
 IGNORE 1 ROWS;
 
 
-CREATE TABLE IF NOT EXISTS constructors (
-    constructorId INT,
-    constructorRef VARCHAR(30),
-    name VARCHAR(20),
-    nationality VARCHAR(20),
-    url VARCHAR(100)
-);
 
--- Load data from CSV file into the table
-LOAD DATA LOCAL INFILE '/data/constructors.csv'
-INTO TABLE constructors
-FIELDS TERMINATED BY ','
-ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
-IGNORE 1 ROWS;
+
+

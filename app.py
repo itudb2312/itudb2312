@@ -1,5 +1,7 @@
-from flask import Flask, render_template, request,jsonify
+
+from flask import Flask, render_template, redirect, url_for, request, jsonify
 import mysql.connector as mysql
+import datetime
 
 app = Flask(__name__ )
 
@@ -32,27 +34,123 @@ def tables():
 def races():
     if request.method == 'POST':
         selected_year = request.form.get('selected_year')
+        search_query = request.form.get('search_query')
 
-        # Check if the selected year is not empty or "All Years"
-        if selected_year and selected_year != "All Years":
+        # Check if the search query is provided
+        if search_query:
+            # If search query is provided, filter the races based on the query
+            search_query = f"%{search_query}%"  # Use "%" for wildcard matching
+            select_query = f"SELECT * FROM races WHERE name LIKE %s OR year LIKE %s"
+            cursor.execute(select_query, (search_query,search_query))
+            result = cursor.fetchall()
+            return render_template('races.html', races=result, selected_year="All Years", search_query=search_query)
+        elif selected_year and selected_year != "All Years":
             # If a specific year is selected, filter by that year
             select_query = f"SELECT * FROM races WHERE year = {selected_year}"
             cursor.execute(select_query)
             result = cursor.fetchall()
-            return render_template('races.html', races=result, selected_year=selected_year)
+            return render_template('races.html', races=result, selected_year=selected_year, search_query="")
         else:
-            # If no specific year is selected or "All Years," retrieve all races
+            # If no specific year or search query is provided, retrieve all races
             select_query = "SELECT * FROM races"
             cursor.execute(select_query)
             result = cursor.fetchall()
-            return render_template('races.html', races=result, selected_year="All Years")
+            return render_template('races.html', races=result, selected_year="All Years", search_query="")
     else:
-        # Retrieve all races when no specific year is selected
+        # Retrieve all races when no specific year or search query is provided
         select_query = "SELECT * FROM races"
         cursor.execute(select_query)
         result = cursor.fetchall()
-        return render_template('races.html', races=result)
+        return render_template('races.html', races=result, search_query="")
 
+    
+@app.route('/add_race', methods=['POST'])
+def add_race():
+    if request.method == 'POST':
+        # Get form data
+        year = request.form['year']
+        round = request.form['round']
+        circuitId = request.form['circuitId']
+        name = request.form['name']
+        date = request.form['date']
+        time = request.form['time']
+        url = request.form['url']
+        fp1_date = request.form['fp1_date']
+        fp1_time = request.form['fp1_time']
+        fp2_date = request.form['fp2_date']
+        fp2_time = request.form['fp2_time']
+        fp3_date = request.form['fp3_date']
+        fp3_time = request.form['fp3_time']
+        quali_date = request.form['quali_date']
+        quali_time = request.form['quali_time']
+        sprint_date = request.form['sprint_date']
+        sprint_time = request.form['sprint_time']
+
+        # Insert new race into the database
+        insert_query = """
+            INSERT INTO races (year, round, circuitId, name, date, time, url,
+                                           fp1_date, fp1_time, fp2_date, fp2_time, fp3_date, fp3_time,
+                                           quali_date, quali_time, sprint_date, sprint_time)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        cursor.execute(insert_query, (year, round, circuitId, name, date, time, url,
+                                      fp1_date, fp1_time, fp2_date, fp2_time, fp3_date, fp3_time,
+                                      quali_date, quali_time, sprint_date, sprint_time))
+        # Commit the changes to the database
+        db.commit()
+
+        return redirect(url_for('races'))
+
+
+# Similarly, you can implement edit and delete routes
+@app.route('/edit_race', methods=['POST'])
+def edit_race():
+    if request.method == 'POST':
+        race_id = request.form.get('raceId')
+        year = request.form.get('year')
+        round = request.form.get('round')
+        circuitId = request.form.get('circuitId')
+        name = request.form.get('name')
+        date = request.form.get('date')
+        time = request.form.get('time')
+        url = request.form.get('url')
+        fp1_date = request.form.get('fp1_date')
+        fp1_time = request.form.get('fp1_time')
+        fp2_date = request.form.get('fp2_date')
+        fp2_time = request.form.get('fp2_time')
+        fp3_date = request.form.get('fp3_date')
+        fp3_time = request.form.get('fp3_time')
+        quali_date = request.form.get('quali_date')
+        quali_time = request.form.get('quali_time')
+        sprint_date = request.form.get('sprint_date')
+        sprint_time = request.form.get('sprint_time')
+
+        update_query = """
+            UPDATE races
+            SET year = %s, round = %s, circuitId = %s, name = %s, date = %s, time = %s,
+                url = %s, fp1_date = %s, fp1_time = %s, fp2_date = %s, fp2_time = %s, fp3_date = %s, fp3_time = %s,
+                quali_date = %s, quali_time = %s, sprint_date = %s, sprint_time = %s
+            WHERE raceId = %s
+        """
+        cursor.execute(update_query, (year, round, circuitId, name, date, time, url,
+                                      fp1_date, fp1_time, fp2_date, fp2_time, fp3_date, fp3_time,
+                                      quali_date, quali_time, sprint_date, sprint_time, race_id))
+        # Commit the changes to the database
+        db.commit()
+
+        return redirect(url_for('races'))
+
+
+@app.route('/delete_race/<int:race_id>', methods=['POST'])
+def delete_race(race_id):
+    if request.method == 'POST':
+        # Delete race from the database based on the race_id
+        delete_query = "DELETE FROM races WHERE raceId = %s"
+        cursor.execute(delete_query, (race_id,))
+        # Commit the changes to the database
+        db.commit()
+
+    return redirect(url_for('races'))
 @app.route('/who_won', methods=['GET'])
 def who_won():
     query = "SELECT * FROM races"
@@ -82,15 +180,40 @@ def get_winner(race_id):
 @app.route('/drivers', methods=['GET', 'POST'])
 def drivers():
     if request.method == 'POST':
-        selected_nationality = request.form.get('selected_nationality')
-        if selected_nationality and selected_nationality != 'all':
-            select_query = f"SELECT * FROM drivers WHERE nationality = '{selected_nationality}'"
-        else:
-            select_query = "SELECT * FROM drivers"
-    else:
-        select_query = "SELECT * FROM drivers"
+        # Check if a search query is present
+        search_query = request.form.get('search_query', None)
+        
+        # Check if a nationality filter is present
+        selected_nationality = request.form.get('selected_nationality', 'all')
 
-    cursor.execute(select_query)
+        if search_query:
+            # If a search query is present, filter the drivers based on it
+            search_query = f"%{search_query}%"
+            select_query = """
+                SELECT * FROM drivers
+                WHERE driverRef LIKE %s
+                    OR number LIKE %s
+                    OR code LIKE %s
+                    OR forename LIKE %s
+                    OR surname LIKE %s
+                    OR dob LIKE %s
+                    OR nationality LIKE %s
+                    OR url LIKE %s
+            """
+            cursor.execute(select_query, (search_query, search_query, search_query, search_query, search_query, search_query, search_query, search_query))
+        elif selected_nationality and selected_nationality != 'all':
+            # If a nationality filter is present, filter the drivers based on it
+            select_query = f"SELECT * FROM drivers WHERE nationality = '{selected_nationality}'"
+            cursor.execute(select_query)
+        else:
+            # If no search query and no nationality filter, retrieve all drivers
+            select_query = "SELECT * FROM drivers"
+            cursor.execute(select_query)
+    else:
+        # Retrieve all drivers when no form is submitted
+        select_query = "SELECT * FROM drivers"
+        cursor.execute(select_query)
+
     result = cursor.fetchall()
 
     # Retrieve distinct nationalities for the dropdown menu
@@ -98,6 +221,43 @@ def drivers():
     nationalities = cursor.fetchall()
 
     return render_template('drivers.html', drivers=result, nationalities=nationalities)
+
+
+@app.route('/about_driver/<int:driver_id>')
+def about_driver(driver_id):
+    # Query to get driver information, total points, races won, and race names
+    query = '''
+        SELECT
+            drivers.forename,
+            drivers.surname,
+            drivers.dob,
+            SUM(results.points) AS total_points,
+            COUNT(CASE WHEN results.positionOrder = 1 THEN 1 END) AS racewins,
+            AVG(results.points) AS avg_points,
+            GROUP_CONCAT(CASE WHEN results.positionOrder = 1 THEN races.name END) AS racewon
+        FROM
+            drivers
+        JOIN
+            results ON drivers.driverId = results.driverId
+        JOIN
+            races ON results.raceId = races.raceId
+        WHERE
+            drivers.driverId = %s
+        GROUP BY
+            drivers.forename,
+            drivers.surname,
+            drivers.dob;    
+    '''
+    cursor.execute(query, (driver_id,))
+    driver_info = cursor.fetchone()
+
+    # Calculate age based on date of birth
+    dob = driver_info[2]
+    today = datetime.date.today()
+    age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+
+    return render_template('about_driver.html', driver_info=driver_info, age=age)
+
 
 @app.route('/driver_stats')
 def driver_stats():
@@ -164,7 +324,71 @@ def get_results(race_id=None):
         result = cursor.fetchall()
         race_info = [result[0][5],result[0][6]]
         return render_template('results.html', results=result ,race_info=race_info)
+
+@app.route('/delete_driver/<int:driver_id>', methods=['POST'])
+def delete_driver(driver_id):
+    if request.method == 'POST':
+        # Perform deletion from the database
+        delete_query = "DELETE FROM drivers WHERE driverId = %s"
+        cursor.execute(delete_query, (driver_id,))
+        db.commit()
+
+        # Redirect to the drivers page or any other page as needed
+        return redirect(url_for('drivers'))
+
+@app.route('/add_driver', methods=['POST'])
+def add_driver():
+    if request.method == 'POST':
+        # Retrieve form data
+        driverRef = request.form.get('driverRef')
+        number = request.form.get('number')
+        code = request.form.get('code')
+        forename = request.form.get('forename')
+        surname = request.form.get('surname')
+        dob = request.form.get('dob')
+        nationality = request.form.get('nationality')
+        url = request.form.get('url')
+
+        # Insert the new driver into the database
+        insert_query = """
+            INSERT INTO drivers (driverRef, number, code, forename, surname, dob, nationality, url)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        cursor.execute(insert_query, (driverRef, number, code, forename, surname, dob, nationality, url))
+        db.commit()
+
+        # Redirect to the drivers page or any other page as needed
+        return redirect(url_for('drivers'))
+
+@app.route('/edit_driver', methods=['POST'])
+def edit_driver():
+    if request.method == 'POST':
+        # Retrieve form data
+        driverId = request.form.get('driverId')
+        driverRef = request.form.get('driverRef')
+        number = request.form.get('number')
+        code = request.form.get('code')
+        forename = request.form.get('forename')
+        surname = request.form.get('surname')
+        dob = request.form.get('dob')
+        nationality = request.form.get('nationality')
+        url = request.form.get('url')
+
+        # Update the driver's information in the database
+        update_query = """
+            UPDATE drivers
+            SET driverRef = %s, number = %s, code = %s, forename = %s, surname = %s, dob = %s, nationality = %s, url = %s
+            WHERE driverId = %s
+        """
+        cursor.execute(update_query, (driverRef, number, code, forename, surname, dob, nationality, url, driverId))
+        db.commit()
+
+        # Redirect to the drivers page or any other page as needed
+        return redirect(url_for('drivers'))
     
+            
+@app.route('/results')
+def results():
     # GET isteği geldiğinde çalışacak olan kodlar
     select_query = "SELECT * FROM results WHERE resultId < 100 LIMIT 0"
     cursor.execute(select_query)
@@ -293,37 +517,231 @@ def pit_stops(race_id=None):
 
     return render_template('pit_stops.html',pit_stops=result,race_info=race_info)
 
-@app.route('/driver_standings')
+@app.route('/driver_standings', methods=['GET', 'POST'])
 def driver_standings():
-    select_query = """SELECT driver_standings.driverStandingsId, races.name, drivers.surname, 
+    if request.method == 'POST':
+        selected_driver = request.form.get('selected_driver')
+    else:
+        selected_driver = 'Hamilton'
+
+    select_query = f"""SELECT driver_standings.driverStandingsId, races.name, drivers.surname, 
         driver_standings.points, driver_standings.position, driver_standings.wins
     FROM driver_standings 
     JOIN drivers ON driver_standings.driverId = drivers.driverId
     JOIN races ON driver_standings.raceId = races.raceId
-    WHERE drivers.surname = "Hamilton"
+    WHERE drivers.surname = '{selected_driver}'
     ORDER BY driver_standings.driverStandingsId ASC;
     """
+
     cursor.execute(select_query)
     result = cursor.fetchall()
 
-    return render_template('driver_standings.html',driver_standings=result)
+    cursor.execute("SELECT DISTINCT surname FROM drivers")
+    drivers = cursor.fetchall()
 
-@app.route('/sprint_results')
+    return render_template('driver_standings.html',driver_standings=result, drivers=drivers)
+
+@app.route('/add_driver_standing', methods=['POST'])
+def add_driver_standing():
+    if request.method == 'POST':
+        race = request.form.get('race')
+        driver = request.form.get('driver')
+        point = request.form.get('point')
+        position = request.form.get('position')
+        wins = request.form.get('wins')
+
+        driverId_query = f"SELECT driverId from drivers WHERE surname='{driver}'"
+        cursor.execute(driverId_query)
+        driverId = cursor.fetchone()
+        driverId = driverId[0]
+        cursor.fetchall()
+
+        raceId_query = f"SELECT raceId from races WHERE name='{race}'"
+        cursor.execute(raceId_query)
+        raceId = cursor.fetchone()
+        raceId = raceId[0]
+        cursor.fetchall()
+
+        insert_query = """
+            INSERT INTO driver_standings (raceId, driverId, points, position, positionText, wins)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """
+        cursor.execute(insert_query,(raceId , driverId, point, position, position, wins))
+        db.commit()
+
+        return redirect(url_for('driver_standings'))
+
+@app.route('/delete_driver_standing/<int:driver_standing_id>', methods=['POST'])
+def delete_driver_standing(driver_standing_id):
+    if request.method == 'POST':
+        delete_query = "DELETE FROM driver_standings WHERE driverStandingsId = %s"
+        cursor.execute(delete_query, (driver_standing_id,))
+        db.commit()
+
+        return redirect(url_for('driver_standings'))
+    
+@app.route('/edit_driver_standing', methods=['POST'])
+def edit_driver_standing():
+    if request.method == 'POST':
+        driverStandingId = request.form.get('driverStandingId')
+        race = request.form.get('race')
+        driver = request.form.get('driver')
+        point = request.form.get('point')
+        position = request.form.get('position')
+        wins = request.form.get('wins')
+
+        driverId_query = f"SELECT driverId from drivers WHERE surname='{driver}'"
+        cursor.execute(driverId_query)
+        driverId = cursor.fetchone()
+        driverId = driverId[0]
+        cursor.fetchall()
+
+        raceId_query = f"SELECT raceId from races WHERE name='{race}'"
+        cursor.execute(raceId_query)
+        raceId = cursor.fetchone()
+        raceId = raceId[0]
+        cursor.fetchall()
+
+        update_query = """
+            UPDATE driver_standings
+            SET raceId = %s, driverId = %s, points = %s, position = %s, positionText = %s, wins = %s
+            WHERE driverStandingsId = %s
+        """
+        cursor.execute(update_query, (raceId, driverId, point, position, position, wins, driverStandingId))
+        db.commit()
+
+        return redirect(url_for('driver_standings'))
+
+
+@app.route('/sprint_results', methods=['GET', 'POST'])
 def sprint_results():
-    select_query = """SELECT sprint_results.resultId, races.name, drivers.surname,
-    constructors.name, sprint_results.number, sprint_results.grid, sprint_results.position, sprint_results.points,
-    sprint_results.laps, sprint_results.time, sprint_results.milliseconds, sprint_results.fastestLap, sprint_results.fastestLapTime
+    select_query = """
+    SELECT sprint_results.resultId, races.name, drivers.surname,
+    constructors.name, sprint_results.number, sprint_results.position, sprint_results.points,
+    sprint_results.laps, sprint_results.time, sprint_results.fastestLap, sprint_results.fastestLapTime
     FROM sprint_results
     JOIN drivers ON sprint_results.driverId = drivers.driverId
     JOIN races ON sprint_results.raceId = races.raceId
     JOIN constructors ON constructors.constructorId = sprint_results.constructorId
-    WHERE drivers.surname = "Hamilton"
     ORDER BY sprint_results.resultId ASC; """
+
+    if request.method == 'POST':
+        selected_constructor = request.form.get('select_constructor')
+        if selected_constructor and selected_constructor != 'all':
+            select_query = f"""SELECT sprint_results.resultId, races.name, drivers.surname,
+                constructors.name, sprint_results.number, sprint_results.position, sprint_results.points,
+                sprint_results.laps, sprint_results.time, sprint_results.fastestLap, sprint_results.fastestLapTime
+                FROM sprint_results
+                JOIN drivers ON sprint_results.driverId = drivers.driverId
+                JOIN races ON sprint_results.raceId = races.raceId
+                JOIN constructors ON constructors.constructorId = sprint_results.constructorId
+                WHERE constructors.name = '{selected_constructor}'
+                ORDER BY sprint_results.resultId ASC; """
 
     cursor.execute(select_query)
     result = cursor.fetchall()
 
-    return render_template('sprint_results.html',sprint_results=result)
+    cursor.execute("SELECT DISTINCT name FROM constructors")
+    constructors = cursor.fetchall()
+
+    return render_template('sprint_results.html',sprint_results=result, constructors=constructors)
+
+@app.route('/add_sprint_result', methods=['POST'])
+def add_sprint_result():
+    if request.method == 'POST':
+        race = request.form.get('race')
+        driver = request.form.get('driver')
+        constructor = request.form.get('constructor')
+        number = request.form.get('number')
+        position = request.form.get('position')
+        points = request.form.get('points')
+        laps = request.form.get('laps')
+        time = request.form.get('time')
+        fastest_lap = request.form.get('fastest_lap')
+        fastest_lap_time = request.form.get('fastest_lap_time')
+
+        driverId_query = f"SELECT driverId from drivers WHERE surname='{driver}'"
+        cursor.execute(driverId_query)
+        driverId = cursor.fetchone()
+        driverId = driverId[0]
+        cursor.fetchall()
+
+        raceId_query = f"SELECT raceId from races WHERE name='{race}'"
+        cursor.execute(raceId_query)
+        raceId = cursor.fetchone()
+        raceId = raceId[0]
+        cursor.fetchall()
+
+        constructorId_query = f"SELECT constructorId from constructors WHERE name='{constructor}'"
+        cursor.execute(constructorId_query)
+        constructorId = cursor.fetchone()
+        constructorId = constructorId[0]
+        cursor.fetchall()
+
+        insert_query = """
+            INSERT INTO sprint_results (raceId, driverId, constructorId, number, position, 
+            positionText, points, laps, time, fastestLap, fastestLapTime)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        cursor.execute(insert_query, (raceId, driverId, constructorId, number, position, position, points, laps, time, fastest_lap, fastest_lap_time))
+        db.commit()
+
+        return redirect(url_for('sprint_results'))
+
+@app.route('/delete_sprint_result/<int:result_id>', methods=['POST'])
+def delete_sprint_result(result_id):
+    if request.method == 'POST':
+        delete_query = "DELETE FROM sprint_results WHERE resultId = %s"
+        cursor.execute(delete_query, (result_id,))
+        db.commit()
+
+        return redirect(url_for('sprint_results'))
+
+@app.route('/edit_sprint_result', methods=['POST'])
+def edit_sprint_result():
+    if request.method == 'POST':
+        resultId = request.form.get('sprintResultId')
+        race = request.form.get('race')
+        driver = request.form.get('driver')
+        constructor = request.form.get('constructor')
+        number = request.form.get('number')
+        position = request.form.get('position')
+        points = request.form.get('points')
+        laps = request.form.get('laps')
+        time = request.form.get('time')
+        fastest_lap = request.form.get('fastest_lap')
+        fastest_lap_time = request.form.get('fastest_lap_time')
+
+        driverId_query = f"SELECT driverId from drivers WHERE surname='{driver}'"
+        cursor.execute(driverId_query)
+        driverId = cursor.fetchone()
+        driverId = driverId[0]
+        cursor.fetchall()
+
+        raceId_query = f"SELECT raceId from races WHERE name='{race}'"
+        cursor.execute(raceId_query)
+        raceId = cursor.fetchone()
+        raceId = raceId[0]
+        cursor.fetchall()
+
+        constructorId_query = f"SELECT constructorId from constructors WHERE name='{constructor}'"
+        cursor.execute(constructorId_query)
+        constructorId = cursor.fetchone()
+        constructorId = constructorId[0]
+        cursor.fetchall()
+
+        update_query = """
+            UPDATE sprint_results
+            SET driverId = %s, raceId = %s, constructorId = %s, number = %s, position = %s, positionText = %s, 
+            points = %s, laps = %s, time = %s, fastestLap=%s, fastestLapTime=%s 
+            WHERE resultId = %s
+        """
+        cursor.execute(update_query, (driverId, raceId, constructorId, number, position, position, points, laps, time, fastest_lap, fastest_lap_time, resultId))
+        db.commit()
+
+        return redirect(url_for('sprint_results'))
+
+
 
 @app.route('/circuits', methods=['GET', 'POST'])
 def circuits():
