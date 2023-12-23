@@ -1,65 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Driver Standings</title>
-        <link
-            rel="stylesheet"
-            href="{{ url_for('static',filename='styles/style.css') }}"
-        />
-    </head>
-    <body>
-        <div class="topnav">
-            <a href="/">Home</a>
-            <div class="dropdown">
-                <button class="dropbtn">Races</button>
-                <div class="dropdown-content">
-                    <a href="/races">All Races</a>
-                    <a href="/who_won">Who Won</a>
-                </div>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Driver Standings</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles/style.css') }}" />
+</head>
+
+<body>
+    <div class="topnav">
+        <a href="/">Home</a>
+        <div class="dropdown">
+            <button class="dropbtn">Races</button>
+            <div class="dropdown-content">
+                <a href="/races">All Races</a>
+                <a href="/who_won">Who Won</a>
             </div>
-            <div class="dropdown">
-                <button class="dropbtn">Drivers</button>
-                <div class="dropdown-content">
-                    <a href="/drivers">All Drivers</a>
-                    <a href="/driver_stats">Driver Stats</a>
-                </div>
-            </div>
-            <a href="/results">Results</a>
-            <a href="/pit_stops">Pit Stops</a>
-            <a href="/driver_standings">Driver Standings</a>
-            <a href="/sprint_results">Sprint Results</a>            
-            <div class="dropdown">
-                <button class="dropbtn">Qualifying And Circuit Data</button>
-                <div class="dropdown-content">
-                    <a href="/qualifying">Driver Qualifying Data</a>
-                    <a href="/circuits">All Circuits</a>
-                </div>
-            </div>           
         </div>
+        <div class="dropdown">
+            <button class="dropbtn">Drivers</button>
+            <div class="dropdown-content">
+                <a href="/drivers">All Drivers</a>
+                <a href="/driver_stats">Driver Stats</a>
+            </div>
+        </div>
+        <a href="/results">Results</a>
+        <a href="/pit_stops">Pit Stops</a>
+        <a href="/driver_standings">Driver Standings</a>
+        <a href="/sprint_results">Sprint Results</a>
+        <div class="dropdown">
+            <button class="dropbtn">Qualifying And Circuit Data</button>
+            <div class="dropdown-content">
+                <a href="/qualifying">Driver Qualifying Data</a>
+                <a href="/circuits">All Circuits</a>
+            </div>
+        </div>
+    </div>
 
-        <h1>Driver Standings</h1>
+    <h1>Driver Standings</h1>
 
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Race Name</th>
-                <th>Driver Name</th>
-                <th>Points</th>
-                <th>Position</th>
-                <th>Wins</th>
-            </tr>
-            {% for driver_standing in driver_standings %}
-            <tr>
-                <td>{{ driver_standing[0] }}</td>
-                <td>{{ driver_standing[1] }}</td>
-                <td>{{ driver_standing[2] }}</td>
-                <td>{{ driver_standing[3] }}</td>
-                <td>{{ driver_standing[4] }}</td>
-                <td>{{ driver_standing[5] }}</td>
-            </tr>
+    <form method="post" action="{{ url_for('driver_standings') }}">
+        <label for="selected_driver">Select Driver:</label>
+        <select name="selected_driver" id="selected_driver">
+            <option value="all">All Drivers</option>
+            {% for driver in drivers %}
+            <option value="{{ driver[0] }}">{{ driver[0] }}</option>
             {% endfor %}
-        </table>
-    </body>
+        </select>
+        <button type="submit">Filter</button>
+        <a href="{{ url_for('driver_standings') }}"><button type="button">Reset</button></a>
+    </form>
+
+    <div style="float: right; margin-top: -40px;">
+        <button onclick="openAddModal()">Add New Driver Standings</button>
+    </div>
+
+    <div id="addModal" class="modal">
+        <div class="modal-content" id="addDriverStandingForm" method="post"
+            action="{{ url_for('add_driver_standing') }}">
+            <form class="modal-form" id="addDriverStandingForm" method="post"
+                action="{{ url_for('add_driver_standing') }}">
+
+                <label for="race">Race:</label>
+                <input type="text" name="race" placeholder="Race Name" required />
+
+                <label for="code">Driver:</label>
+                <input type="text" name="driver" placeholder="Driver" required />
+
+                <label for="forename">Point:</label>
+                <input type="text" name="point" placeholder="Point" required />
+
+                <label for="position">Position:</label>
+                <input type="text" name="position" placeholder="Position" required />
+
+                <label for="wins">Wins:</label>
+                <input type="text" name="wins" placeholder="Wins" required />
+
+                <button type="submit">Add Driver Standing</button>
+                <button type="button" onclick="closeAddModal()">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content" id="editDriverForm">
+            <form class="modal-form" method="post" action="{{ url_for('edit_driver_standing') }}">
+                <label for="driverStandingId">Driver Standing Id:</label>
+                <input type="text" name="driverStandingId" id="driverStandingId" required readonly/>
+                
+                <label for="race">Race:</label>
+                <input type="text" name="race" placeholder="Race Name" required />
+
+                <label for="code">Driver:</label>
+                <input type="text" name="driver" placeholder="Driver" required />
+
+                <label for="forename">Point:</label>
+                <input type="text" name="point" placeholder="Point" required />
+
+                <label for="position">Position:</label>
+                <input type="text" name="position" placeholder="Position" required />
+
+                <label for="wins">Wins:</label>
+                <input type="text" name="wins" placeholder="Wins" required />
+
+                <button type="submit">Update Driver Standing</button>
+                <button type="button" onclick="closeAddModal()">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <table>
+        <tr>
+            <th>Race Name</th>
+            <th>Driver Name</th>
+            <th>Points</th>
+            <th>Position</th>
+            <th>Wins</th>
+            <th>Actions</th>
+        </tr>
+        {% for driver_standing in driver_standings %}
+        <tr>
+            <td>{{ driver_standing[1] }}</td>
+            <td>{{ driver_standing[2] }}</td>
+            <td>{{ driver_standing[3] }}</td>
+            <td>{{ driver_standing[4] }}</td>
+            <td>{{ driver_standing[5] }}</td>
+            <td>
+                <button type="button" onclick="openEditModal('{{ driver_standing[0] }}')">Edit</button>
+                <form method="post" action="{{ url_for('delete_driver_standing', driver_standing_id=driver_standing[0]) }}">
+                    <button class="delete" type="submit" onclick="return confirm('Are you sure you want to delete this record?')">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <script>
+        function openEditModal(driverStandingId) {
+            document.getElementById("driverStandingId").value = driverStandingId;
+            document.getElementById("editModal").style.display = "block";
+        }
+
+        function closeEditModal() {
+            document.getElementById("editModal").style.display = "none";
+        }
+
+        function openAddModal() {
+            document.getElementById("addModal").style.display = "block";
+        }
+
+        function closeAddModal() {
+            document.getElementById("addModal").style.display = "none";
+        }
+    </script>
+</body>
+
 </html>

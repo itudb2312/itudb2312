@@ -104,7 +104,7 @@ IGNORE 1 ROWS;
 
 -- Create the table if it doesn't exist
 CREATE TABLE IF NOT EXISTS sprint_results (
-    resultId INT,
+    resultId INT AUTO_INCREMENT,
     raceId INT,
     driverId INT,
     constructorId INT,
@@ -119,7 +119,9 @@ CREATE TABLE IF NOT EXISTS sprint_results (
     milliseconds INT,
     fastestLap INT,
     fastestLapTime VARCHAR(10),
-    statusId INT
+    statusId INT,
+
+    PRIMARY KEY(resultId)
 );
 
 -- Load data from CSV file into the table
@@ -133,13 +135,15 @@ IGNORE 1 ROWS;
 
 -- Create the table if it doesn't exist
 CREATE TABLE IF NOT EXISTS driver_standings (
-    driverStandingsId INT,
+    driverStandingsId INT AUTO_INCREMENT,
     raceId INT,
     driverId INT,
     points INT,
     position INT,
     positionText VARCHAR(10),
-    wins INT
+    wins INT,
+
+    PRIMARY KEY(driverStandingsId)
 );
 
 -- Load data from CSV file into the table
