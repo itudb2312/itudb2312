@@ -40,6 +40,15 @@
     </div>
     <h1>F1 - Circuits</h1>
 
+    <form method="post" action="{{ url_for('circuits')}}" class="search_form">
+        <label for="search_query" class="visually-hidden"></label>
+        <div class="search_container">
+            <input type="text" id="search_query" name="search_query" placeholder="Search for a circuit" />
+            <button type="submit">Search</button>
+        </div>
+    </form>
+
+    <p>Below is a table of all the circuits that have been used in F1.</p>
     <form method="post" action="{{ url_for('circuits') }}">
         <label for="selected_hemisphere">Select Hemisphere:</label>
         <select name="selected_hemisphere" id="selected_hemisphere">
@@ -51,6 +60,82 @@
         <a href="{{ url_for('circuits') }}"><button type="button">Reset Hemisphere</button></a>
     </form>
 
+    <div style="float: right; margin-top: -25px;">
+        <button onclick="openAddModal()">Add New Circuit</button>
+    </div>
+
+    <div id="addModal" class="modal">
+        <div class = "modal-content" id="addCircuitForm" method="post" action="{{ url_for('add_circuit') }}">
+            <form class = "modal-form" id="addCircuitForm" method="post" action="{{ url_for('add_circuit') }}">
+                <h2>Add New Circuit</h2>
+                <p>Please fill in this form to add a new circuit.</p>
+                <label for="name">Circuit Name:</label>
+                <input type="text" name="name" placeholder="Enter Circuit Name" required/>
+
+                <label for="location">Circuit Location:</label>
+                <input type="text" name="location" placeholder="Enter Circuit Location" required/>
+
+                <label for="country">Circuit Country:</label>
+                <input type="text" name="country" placeholder="Enter Circuit Country" required/>
+                
+                <label for="lat">Circuit Latitude:</label>
+                <input type="number" name="lat" placeholder="Enter Circuit Latitude" required/>
+                
+                <label for="long">Circuit Longitude:</label>
+                <input type="number" name="long" placeholder="Enter Circuit Longitude" required/>
+                
+                <label for="alt">Circuit Altitude:</label>
+                <input type="number" name="alt" placeholder="Enter Circuit Altitude" required/>
+                
+                <label for="url">Circuit URL:</label>
+                <input type="text" name="url" placeholder="Enter Circuit URL" required/>
+
+                <button type="submit">Add Circuit</button>
+
+                <button type="button" onclick="closeAddModal()">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class = "modal-content" id="editCircuitForm" method="post" action="{{ url_for('edit_circuit') }}">
+            <form class = "modal-form" id="editCircuitForm" method="post" action="{{ url_for('edit_circuit') }}">
+                <h2>Edit Circuit</h2>
+                <p>Please fill in this form to edit a circuit.</p>
+
+                <label for="circuitId">Circuit ID:</label>
+                <input type="text" name="circuitId" id="circuitId" required readonly/>
+
+                <label for="circuitRef">Ref Name:</label>
+                <input type="text" name="circuitRef" placeholder="Enter Ref Name" required/>
+
+                <label for="name">Circuit Name:</label>
+                <input type="text" name="name" placeholder="Enter Circuit Name" required/>
+
+                <label for="location">Circuit Location:</label>
+                <input type="text" name="location" placeholder="Enter Circuit Location" required/>
+
+                <label for="country">Circuit Country:</label>
+                <input type="text" name="country" placeholder="Enter Circuit Country" required/>
+                
+                <label for="lat">Circuit Latitude:</label>
+                <input type="number" name="lat" placeholder="Enter Circuit Latitude" required/>
+                
+                <label for="long">Circuit Longitude:</label>
+                <input type="number" name="long" placeholder="Enter Circuit Longitude" required/>
+                
+                <label for="alt">Circuit Altitude:</label>
+                <input type="number" name="alt" placeholder="Enter Circuit Altitude" required/>
+                
+                <label for="url">Circuit URL:</label>
+                <input type="text" name="url" placeholder="Enter Circuit URL" required/>
+
+                <button type="submit">Edit Circuit</button>
+                <button type="button" onclick="closeEditModal()">Cancel</button>
+            </form>
+        </div>
+    </div>
+
     <table>
         <tr>
             <th>Name</th>
@@ -58,17 +143,43 @@
             <th>Country</th>
             <th>Altitude</th>
             <th>URL</th>
+            <th>Edit/Delete</th>
         </tr>
         {% for circuit in circuits %}
         <tr>
-            <td>{{ circuit[0] }}</td>
             <td>{{ circuit[1] }}</td>
             <td>{{ circuit[2] }}</td>
             <td>{{ circuit[3] }}</td>
             <td>{{ circuit[4] }}</td>
+            <td><a class="clickable-link" href="{{ circuit[5] }}" target="_blank">{{ circuit[5] }}</a></td>
+            <td>
+                <button type="button" onclick="openEditModal('{{ circuit[0] }}')">Edit Circuit</button>
+                <form method="post" action="{{ url_for('delete_circuit', circuit_id=circuit[0]) }}">
+                    <button class="delete" type="submit" onclick="return confirm('Are you sure you want to delete this circuit?')">Delete Circuit</button>
+                </form>
+            </td>
         </tr>
         {% endfor %}
     </table>
+
+    <script>
+        function openEditModal(circuitId) {
+            document.getElementById("circuitId").value = circuitId;
+            document.getElementById("editModal").style.display = "block";
+        }
+
+        function closeEditModal() {
+            document.getElementById("editModal").style.display = "none";
+        }
+
+        function openAddModal() {
+            document.getElementById("addModal").style.display = "block";
+        }
+    
+        function closeAddModal() {
+            document.getElementById("addModal").style.display = "none";
+        }
+    </script>
 </body>
 
 </html>
