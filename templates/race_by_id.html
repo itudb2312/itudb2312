@@ -11,7 +11,12 @@
     </head>
     <body>
         <div class="topnav">
-            <a href="/">Home</a>
+            <a href="/"
+                ><img
+                    src="{{ url_for('static', filename='styles/f1_logo.svg') }}"
+                    height="30"
+                    alt=""
+            /></a>
             <div class="dropdown">
                 <button class="dropbtn">Races</button>
                 <div class="dropdown-content">
@@ -39,11 +44,19 @@
             </div>
         </div>
 
-        <h1>{{result[4]}}</h1>
-        <h2>{{result[1]}}</h2>
-
-        <button>Pit Stops</button>
-        <button>Results</button>
-        <button>Qualifying</button>
+        <div class="race_top">
+            <div
+                class="content"
+                style="margin-top: 0px; margin-bottom: 0px; padding: 50px 20px"
+            >
+                <h1 style="font-size: 72px">{{result[1]}}</h1>
+                <h1 style="font-size: 84px">{{result[4]}}</h1>
+            </div>
+        </div>
+        <div class="race_buttons">
+            <a href="/results/{{ result[0] }}" class="race_button">Results</a>
+            <a href="" class="race_button">Qualifying</a>
+            <a href="" class="race_button">Pit Stops</a>
+        </div>
     </body>
 </html>
