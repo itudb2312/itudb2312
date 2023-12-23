@@ -53,7 +53,94 @@ def races():
         cursor.execute(select_query)
         result = cursor.fetchall()
         return render_template('races.html', races=result)
+    
+@app.route('/add_race', methods=['POST'])
+def add_race():
+    if request.method == 'POST':
+        # Get form data
+        year = request.form['year']
+        round = request.form['round']
+        circuitId = request.form['circuitId']
+        name = request.form['name']
+        date = request.form['date']
+        time = request.form['time']
+        url = request.form['url']
+        fp1_date = request.form['fp1_date']
+        fp1_time = request.form['fp1_time']
+        fp2_date = request.form['fp2_date']
+        fp2_time = request.form['fp2_time']
+        fp3_date = request.form['fp3_date']
+        fp3_time = request.form['fp3_time']
+        quali_date = request.form['quali_date']
+        quali_time = request.form['quali_time']
+        sprint_date = request.form['sprint_date']
+        sprint_time = request.form['sprint_time']
 
+        # Insert new race into the database
+        insert_query = """
+            INSERT INTO races (year, round, circuitId, name, date, time, url,
+                                           fp1_date, fp1_time, fp2_date, fp2_time, fp3_date, fp3_time,
+                                           quali_date, quali_time, sprint_date, sprint_time)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        cursor.execute(insert_query, (year, round, circuitId, name, date, time, url,
+                                      fp1_date, fp1_time, fp2_date, fp2_time, fp3_date, fp3_time,
+                                      quali_date, quali_time, sprint_date, sprint_time))
+        # Commit the changes to the database
+        db.commit()
+
+        return redirect(url_for('races'))
+
+
+# Similarly, you can implement edit and delete routes
+@app.route('/edit_race', methods=['POST'])
+def edit_race():
+    if request.method == 'POST':
+        race_id = request.form.get('raceId')
+        year = request.form.get('year')
+        round = request.form.get('round')
+        circuitId = request.form.get('circuitId')
+        name = request.form.get('name')
+        date = request.form.get('date')
+        time = request.form.get('time')
+        url = request.form.get('url')
+        fp1_date = request.form.get('fp1_date')
+        fp1_time = request.form.get('fp1_time')
+        fp2_date = request.form.get('fp2_date')
+        fp2_time = request.form.get('fp2_time')
+        fp3_date = request.form.get('fp3_date')
+        fp3_time = request.form.get('fp3_time')
+        quali_date = request.form.get('quali_date')
+        quali_time = request.form.get('quali_time')
+        sprint_date = request.form.get('sprint_date')
+        sprint_time = request.form.get('sprint_time')
+
+        update_query = """
+            UPDATE races
+            SET year = %s, round = %s, circuitId = %s, name = %s, date = %s, time = %s,
+                url = %s, fp1_date = %s, fp1_time = %s, fp2_date = %s, fp2_time = %s, fp3_date = %s, fp3_time = %s,
+                quali_date = %s, quali_time = %s, sprint_date = %s, sprint_time = %s
+            WHERE raceId = %s
+        """
+        cursor.execute(update_query, (year, round, circuitId, name, date, time, url,
+                                      fp1_date, fp1_time, fp2_date, fp2_time, fp3_date, fp3_time,
+                                      quali_date, quali_time, sprint_date, sprint_time, race_id))
+        # Commit the changes to the database
+        db.commit()
+
+        return redirect(url_for('races'))
+
+
+@app.route('/delete_race/<int:race_id>', methods=['POST'])
+def delete_race(race_id):
+    if request.method == 'POST':
+        # Delete race from the database based on the race_id
+        delete_query = "DELETE FROM races WHERE raceId = %s"
+        cursor.execute(delete_query, (race_id,))
+        # Commit the changes to the database
+        db.commit()
+
+    return redirect(url_for('races'))
 @app.route('/who_won', methods=['GET'])
 def who_won():
     query = "SELECT * FROM races"
