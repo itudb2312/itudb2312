@@ -455,7 +455,7 @@ def sprint_results():
     if request.method == 'POST':
         selected_constructor = request.form.get('select_constructor')
         if selected_constructor and selected_constructor != 'all':
-            select_query = f"""SELECT races.name, drivers.surname,
+            select_query = f"""SELECT sprint_results.resultId, races.name, drivers.surname,
                 constructors.name, sprint_results.number, sprint_results.position, sprint_results.points,
                 sprint_results.laps, sprint_results.time, sprint_results.fastestLap, sprint_results.fastestLapTime
                 FROM sprint_results
