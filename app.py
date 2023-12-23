@@ -275,7 +275,7 @@ def driver_stats():
 
     return render_template('driver_stats.html', driver_stats=driver_stats)
 
-@app.route('/results', methods=['GET', 'POST'])
+@app.route('/results/', methods=['GET', 'POST'])
 @app.route('/race/<int:race_id>/results/', methods=['GET', 'POST'])
 def get_results(race_id=None):
     if request.method == 'POST':
@@ -386,15 +386,6 @@ def edit_driver():
         # Redirect to the drivers page or any other page as needed
         return redirect(url_for('drivers'))
     
-            
-@app.route('/results')
-def results():
-    # GET isteği geldiğinde çalışacak olan kodlar
-    select_query = "SELECT * FROM results WHERE resultId < 100 LIMIT 0"
-    cursor.execute(select_query)
-    result = cursor.fetchall()
-
-    return render_template('results.html', results=result)
 
 @app.route('/create_result', methods=['GET', 'POST'])
 def create_result():
@@ -441,10 +432,12 @@ def race(race_id):
 @app.route('/get_races', methods=['POST'])
 def get_races():
     selected_year = request.form['year']
+
     select_query = f"""SELECT name
         FROM races
         WHERE year = {selected_year}
         """
+    
     cursor.execute(select_query)
     result = cursor.fetchall()
     return jsonify({'races': result})

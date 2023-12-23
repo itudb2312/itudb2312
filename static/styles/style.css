@@ -14,7 +14,8 @@ table {
     margin-top: 20px;
 }
 
-th, td {
+th,
+td {
     border: 1px solid #e0e0e0;
     padding: 12px;
     text-align: left;
@@ -203,7 +204,7 @@ table button:hover {
     background-color: #e93706;
     color: #fff;
     transition: 0.5s;
-
+}
 
 button {
     background-color: #4caf50; /* Green background color */
@@ -248,7 +249,8 @@ button[type="button"] {
 }
 
 /* Hover effect for buttons */
-button:hover, .dropbtn:hover {
+button:hover,
+.dropbtn:hover {
     opacity: 0.8; /* Reduced opacity on hover */
 }
 
@@ -264,9 +266,10 @@ select {
     cursor: pointer;
 }
 
-
 /* Hover effect for buttons */
-button:hover, select:hover, form button:hover {
+button:hover,
+select:hover,
+form button:hover {
     opacity: 0.8; /* Reduced opacity on hover */
 }
 
