@@ -66,18 +66,16 @@
             }
 
             form select:hover {
-                background-color: #000000;
-                color: rgb(255, 255, 255);
+                background-color: #dedede;
             }
 
             form select:active {
-                background-color: #000000;
-                color: rgb(255, 255, 255);
+                background-color: #396bea;
             }
 
             form select:focus {
-                background-color: #000000;
-                color: rgb(255, 255, 255);
+                background-color: #396bea;
+                color: white;
             }
 
             form input[type="text"] {
@@ -129,6 +127,7 @@
                 font-size: 24px;
                 font-family: "Gill Sans", "Gill Sans MT", Calibri,
                     "Trebuchet MS", sans-serif;
+                text-align: center;
             }
 
             .result_driver {
@@ -147,6 +146,35 @@
                 width: 5%;
                 margin-right: 20px;
                 padding: 10px;
+            }
+
+            .results_topbar_right {
+                display: flex;
+                align-items: flex-end;
+                justify-content: center;
+                flex-direction: column;
+                gap: 50px;
+            }
+
+            .results_topbar_right_button {
+                color: #ffffff;
+                padding: 10px 15px;
+                border: none;
+                cursor: pointer;
+                border-radius: 4px;
+                font-size: 16px;
+                text-decoration: none;
+            }
+
+            .rtrb_create {
+                background-color: #4caf50;
+                border: 1px solid #337e35;
+                transition: 0.5s;
+            }
+
+            .rtrb_update {
+                background-color: #3b77d7;
+                border: 1px solid #2e60b1;
             }
         </style>
     </head>
@@ -189,19 +217,34 @@
             <div class="results_topbar">
                 <h1 style="font-size: xxx-large">Race Results</h1>
 
-                <form method="POST" action="">
-                    <label for="year">Yıl:</label>
-                    <select id="year" name="year">
-                        {% for year in range(1950, 2024) %}
-                        <option value="{{ year }}">{{ year }}</option>
-                        {% endfor %}
-                    </select>
+                <div class="results_topbar_right">
+                    <div class="results_topbar_right_buttons">
+                        <!-- <a
+                            class="results_topbar_right_button rtrb_update"
+                            href=""
+                            >Update Existing Race Result</a
+                        > -->
+                        <a
+                            class="results_topbar_right_button rtrb_create"
+                            href=""
+                            >Create New Race Result</a
+                        >
+                    </div>
 
-                    <label for="race">Yarış İsmi:</label>
-                    <select id="race" name="race"></select>
+                    <form method="POST" action="">
+                        <label for="year">Yıl:</label>
+                        <select id="year" name="year">
+                            {% for year in range(1950, 2024) %}
+                            <option value="{{ year }}">{{ year }}</option>
+                            {% endfor %}
+                        </select>
 
-                    <input type="submit" value="Filter" />
-                </form>
+                        <label for="race">Yarış İsmi:</label>
+                        <select id="race" name="race"></select>
+
+                        <input type="submit" value="Filter" />
+                    </form>
+                </div>
             </div>
 
             {% if results != [] %}
@@ -226,6 +269,8 @@
                 <div class="result_driver">{{ result[2] }}</div>
                 <div class="result_constructor">{{ result[3] }}</div>
                 <div class="result_points">{{ result[4] }}</div>
+                <a href="" class="result_btn result_btn_edit">Edit</a>
+                <a href="" class="result_btn result_btn_delete">Delete</a>
             </div>
             {% endfor %}
         </div>
