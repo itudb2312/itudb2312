@@ -173,15 +173,47 @@ def get_results(race_id=None):
 
     return render_template('results.html', results=result)
 
+@app.route('/create_result', methods=['GET', 'POST'])
+def create_result():
+    if request.method == 'POST':
+        result_id = request.form['result_id']
+        race_id = request.form['race_id']
+        driver_id = request.form['driver_id']
+        constructor_id = request.form['constructor_id']
+        number = request.form['number']
+        grid = request.form['grid']
+        position = request.form['position']
+        position_text = request.form['position_text']
+        position_order = request.form['position_order']
+        points = request.form['points']
+        laps = request.form['laps']
+        time = request.form['time']
+        milliseconds = request.form['milliseconds']
+        fastest_lap = request.form['fastest_lap']
+        rank = request.form['rank']
+        fastest_lap_time = request.form['fastest_lap_time']
+        fastest_lap_speed = request.form['fastest_lap_speed']
+        status_id = request.form['status_id']
+        
+        
+        # Insert the result into the database
+        insert_query = f"INSERT INTO results (raceId, driverId, position, points) VALUES ({race_id}, {driver_id}, {position}, {points})"
+        cursor.execute(insert_query)
+        db.commit()
+        
+        return "Result created successfully"
+    
+    return render_template('create_result.html')
+    
 
 @app.route('/race/<int:race_id>', methods=['GET','POST'])
 def race(race_id):
-
     select_query = f"""SELECT * FROM races WHERE raceId = {race_id} LIMIT 1"""
     cursor.execute(select_query)
     result = cursor.fetchall()
 
     return render_template('race_by_id.html',result=result[0])
+
 
 @app.route('/get_races', methods=['POST'])
 def get_races():
