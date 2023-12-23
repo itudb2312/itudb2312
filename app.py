@@ -33,26 +33,35 @@ def tables():
 def races():
     if request.method == 'POST':
         selected_year = request.form.get('selected_year')
+        search_query = request.form.get('search_query')
 
-        # Check if the selected year is not empty or "All Years"
-        if selected_year and selected_year != "All Years":
+        # Check if the search query is provided
+        if search_query:
+            # If search query is provided, filter the races based on the query
+            search_query = f"%{search_query}%"  # Use "%" for wildcard matching
+            select_query = f"SELECT * FROM races WHERE name LIKE %s OR year LIKE %s"
+            cursor.execute(select_query, (search_query,search_query))
+            result = cursor.fetchall()
+            return render_template('races.html', races=result, selected_year="All Years", search_query=search_query)
+        elif selected_year and selected_year != "All Years":
             # If a specific year is selected, filter by that year
             select_query = f"SELECT * FROM races WHERE year = {selected_year}"
             cursor.execute(select_query)
             result = cursor.fetchall()
-            return render_template('races.html', races=result, selected_year=selected_year)
+            return render_template('races.html', races=result, selected_year=selected_year, search_query="")
         else:
-            # If no specific year is selected or "All Years," retrieve all races
+            # If no specific year or search query is provided, retrieve all races
             select_query = "SELECT * FROM races"
             cursor.execute(select_query)
             result = cursor.fetchall()
-            return render_template('races.html', races=result, selected_year="All Years")
+            return render_template('races.html', races=result, selected_year="All Years", search_query="")
     else:
-        # Retrieve all races when no specific year is selected
+        # Retrieve all races when no specific year or search query is provided
         select_query = "SELECT * FROM races"
         cursor.execute(select_query)
         result = cursor.fetchall()
-        return render_template('races.html', races=result)
+        return render_template('races.html', races=result, search_query="")
+
     
 @app.route('/add_race', methods=['POST'])
 def add_race():
