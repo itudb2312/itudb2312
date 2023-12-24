@@ -672,23 +672,11 @@ def add_driver_standing():
         position = request.form.get('position')
         wins = request.form.get('wins')
 
-        driverId_query = f"SELECT driverId from drivers WHERE surname='{driver}'"
-        cursor.execute(driverId_query)
-        driverId = cursor.fetchone()
-        driverId = driverId[0]
-        cursor.fetchall()
-
-        raceId_query = f"SELECT raceId from races WHERE name='{race}'"
-        cursor.execute(raceId_query)
-        raceId = cursor.fetchone()
-        raceId = raceId[0]
-        cursor.fetchall()
-
         insert_query = """
             INSERT INTO driver_standings (raceId, driverId, points, position, positionText, wins)
             VALUES (%s, %s, %s, %s, %s, %s)
         """
-        cursor.execute(insert_query,(raceId , driverId, point, position, position, wins))
+        cursor.execute(insert_query,(race , driver, point, position, position, wins))
         db.commit()
 
         return redirect(url_for('driver_standings'))
@@ -712,24 +700,12 @@ def edit_driver_standing():
         position = request.form.get('position')
         wins = request.form.get('wins')
 
-        driverId_query = f"SELECT driverId from drivers WHERE surname='{driver}'"
-        cursor.execute(driverId_query)
-        driverId = cursor.fetchone()
-        driverId = driverId[0]
-        cursor.fetchall()
-
-        raceId_query = f"SELECT raceId from races WHERE name='{race}'"
-        cursor.execute(raceId_query)
-        raceId = cursor.fetchone()
-        raceId = raceId[0]
-        cursor.fetchall()
-
         update_query = """
             UPDATE driver_standings
             SET raceId = %s, driverId = %s, points = %s, position = %s, positionText = %s, wins = %s
             WHERE driverStandingsId = %s
         """
-        cursor.execute(update_query, (raceId, driverId, point, position, position, wins, driverStandingId))
+        cursor.execute(update_query, (race, driver, point, position, position, wins, driverStandingId))
         db.commit()
 
         return redirect(url_for('driver_standings'))
@@ -782,30 +758,12 @@ def add_sprint_result():
         fastest_lap = request.form.get('fastest_lap')
         fastest_lap_time = request.form.get('fastest_lap_time')
 
-        driverId_query = f"SELECT driverId from drivers WHERE surname='{driver}'"
-        cursor.execute(driverId_query)
-        driverId = cursor.fetchone()
-        driverId = driverId[0]
-        cursor.fetchall()
-
-        raceId_query = f"SELECT raceId from races WHERE name='{race}'"
-        cursor.execute(raceId_query)
-        raceId = cursor.fetchone()
-        raceId = raceId[0]
-        cursor.fetchall()
-
-        constructorId_query = f"SELECT constructorId from constructors WHERE name='{constructor}'"
-        cursor.execute(constructorId_query)
-        constructorId = cursor.fetchone()
-        constructorId = constructorId[0]
-        cursor.fetchall()
-
         insert_query = """
             INSERT INTO sprint_results (raceId, driverId, constructorId, number, position, 
             positionText, points, laps, time, fastestLap, fastestLapTime)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
-        cursor.execute(insert_query, (raceId, driverId, constructorId, number, position, position, points, laps, time, fastest_lap, fastest_lap_time))
+        cursor.execute(insert_query, (race, driver, constructor, number, position, position, points, laps, time, fastest_lap, fastest_lap_time))
         db.commit()
 
         return redirect(url_for('sprint_results'))
@@ -834,31 +792,13 @@ def edit_sprint_result():
         fastest_lap = request.form.get('fastest_lap')
         fastest_lap_time = request.form.get('fastest_lap_time')
 
-        driverId_query = f"SELECT driverId from drivers WHERE surname='{driver}'"
-        cursor.execute(driverId_query)
-        driverId = cursor.fetchone()
-        driverId = driverId[0]
-        cursor.fetchall()
-
-        raceId_query = f"SELECT raceId from races WHERE name='{race}'"
-        cursor.execute(raceId_query)
-        raceId = cursor.fetchone()
-        raceId = raceId[0]
-        cursor.fetchall()
-
-        constructorId_query = f"SELECT constructorId from constructors WHERE name='{constructor}'"
-        cursor.execute(constructorId_query)
-        constructorId = cursor.fetchone()
-        constructorId = constructorId[0]
-        cursor.fetchall()
-
         update_query = """
             UPDATE sprint_results
             SET driverId = %s, raceId = %s, constructorId = %s, number = %s, position = %s, positionText = %s, 
             points = %s, laps = %s, time = %s, fastestLap=%s, fastestLapTime=%s 
             WHERE resultId = %s
         """
-        cursor.execute(update_query, (driverId, raceId, constructorId, number, position, position, points, laps, time, fastest_lap, fastest_lap_time, resultId))
+        cursor.execute(update_query, (driver, race, constructor, number, position, position, points, laps, time, fastest_lap, fastest_lap_time, resultId))
         db.commit()
 
         return redirect(url_for('sprint_results'))
