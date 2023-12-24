@@ -279,11 +279,11 @@ def about_driver(driver_id):
     cursor.execute(query, (driver_id,))
     driver_info = cursor.fetchone()
 
-    # Calculate age based on date of birth
-    dob = driver_info[2]
-    today = datetime.date.today()
-    age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
-
+    if driver_info is not None:
+        dob = driver_info[2]
+        today = datetime.date.today()
+        age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+    else: age = 0
     return render_template('about_driver.html', driver_info=driver_info, age=age)
 
 
