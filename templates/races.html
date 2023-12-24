@@ -416,8 +416,6 @@
                 <button onclick="openAddModal()">Add New Race</button>
             </div>
 
-            {% if selected_year and races %}
-
             <div class="race_boxes">
                 {% for race in races %}
                 <div class="race_box">
@@ -451,7 +449,6 @@
                 </div>
                 {% endfor %}
             </div>
-            {% endif %}
         </div>
 
         <!-- ... (JavaScript code for modals) -->
