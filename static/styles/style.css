@@ -1,6 +1,11 @@
+* {
+    box-sizing: border-box;
+    margin: 0px;
+    padding: 0px;
+}
+
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    margin: 20px;
+    font-family: "Montserrat", sans-serif;
 }
 
 table {
@@ -9,7 +14,8 @@ table {
     margin-top: 20px;
 }
 
-th, td {
+th,
+td {
     border: 1px solid #e0e0e0;
     padding: 12px;
     text-align: left;
@@ -82,7 +88,11 @@ table button:hover {
 
 .topnav {
     overflow: hidden;
-    background-color: #464646;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    background-color: #df0000;
+    height: 60px;
 }
 
 .topnav a {
@@ -90,13 +100,13 @@ table button:hover {
     display: block;
     color: #f2f2f2;
     text-align: center;
-    padding: 14px 16px;
+    padding: 24px 16px;
     text-decoration: none;
 }
 
 .topnav a:hover {
-    background-color: #ddd;
-    color: black;
+    background-color: #000000;
+    color: rgb(255, 255, 255);
 }
 
 .dropdown {
@@ -109,15 +119,16 @@ table button:hover {
     border: none;
     outline: none;
     color: #f2f2f2;
-    padding: 14px 16px;
+    padding: 24px 16px;
     background-color: inherit;
     font-family: inherit;
     margin: 0;
 }
 
-.topnav a:hover, .dropdown:hover .dropbtn {
-    background-color: #ddd;
-    color: black;
+.topnav a:hover,
+.dropdown:hover .dropbtn {
+    background-color: #000000;
+    color: rgb(255, 255, 255);
 }
 
 .dropdown-content {
@@ -139,11 +150,62 @@ table button:hover {
 }
 
 .dropdown-content a:hover {
-    background-color: #ddd;
+    background-color: #000000;
 }
 
 .dropdown:hover .dropdown-content {
     display: block;
+    transition: 0.5s;
+    margin-top: -10px;
+}
+
+.content {
+    margin: 40px;
+    height: calc(100% / 2);
+}
+
+.result_btn {
+    width: 4%;
+    margin-right: 6px;
+    text-align: center;
+    background-color: #ebebeb;
+    color: #c7c7c7;
+    padding: 10px 15px;
+    border: none;
+    font-size: 12px;
+    border-radius: 2px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: 0.5s;
+}
+
+.pitstop_btn {
+    text-align: center;
+    background-color: #ebebeb;
+    color: #c7c7c7;
+    padding: 10px 15px;
+    border: none;
+    font-size: 12px;
+    border-radius: 2px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: 0.5s;
+}
+
+.result_btn_edit:hover {
+    background-color: #3b77d7;
+    color: #fff;
+    transition: 0.5s;
+}
+
+.result_btn_delete {
+    width: 5%;
+}
+
+.result_btn_delete:hover {
+    background-color: #e93706;
+    color: #fff;
+    transition: 0.5s;
 }
 
 button {
@@ -189,7 +251,8 @@ button[type="button"] {
 }
 
 /* Hover effect for buttons */
-button:hover, .dropbtn:hover {
+button:hover,
+.dropbtn:hover {
     opacity: 0.8; /* Reduced opacity on hover */
 }
 
@@ -205,9 +268,10 @@ select {
     cursor: pointer;
 }
 
-
 /* Hover effect for buttons */
-button:hover, select:hover, form button:hover {
+button:hover,
+select:hover,
+form button:hover {
     opacity: 0.8; /* Reduced opacity on hover */
 }
 
