@@ -152,15 +152,19 @@ def delete_race(race_id):
 
     return redirect(url_for('races'))
 
-
-@app.route('/race/<int:race_id>/', methods=['GET','POST'])
+@app.route('/race/<int:race_id>/', methods=['GET', 'POST'])
 def race(race_id):
-    select_query = f"""SELECT * FROM races WHERE raceId = {race_id} LIMIT 1"""
+    select_query = f"""
+    SELECT races.*, circuits.name AS circuitName
+    FROM races
+    JOIN circuits ON races.circuitId = circuits.circuitId
+    WHERE races.raceId = {race_id}
+    LIMIT 1
+    """
     cursor.execute(select_query)
     result = cursor.fetchall()
 
-    return render_template('race_by_id.html',result=result[0])
-
+    return render_template('race_by_id.html', result=result[0])
 
 @app.route('/get_races', methods=['POST'])
 def get_races():
