@@ -21,3 +21,9 @@ join, order by, group by statements better
 - Added more functionality to qualifying and circuit queries and made them show more useful data
 - Updated selection for qualifying and circuit data to dropdown
 - Updated all hmtl files according to new features/fixes
+
+23.12.2023
+- Updated table properties in init.sql adding constraints such as primary keys, auto_increment etc.
+- Added search functionality for circuits and qualifying tables
+- Added CRUD operations to both tables by writing new python functions for creating, editing and deleting elements
+- Updated circuits and qualifying htmls according to all the changes, adding edit and create element forms and element deletition functionality

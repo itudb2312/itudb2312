@@ -29,13 +29,14 @@
                     <a href="/races">All Races</a>
                     <a href="/who_won">Who Won</a>
                 </div>
+
             </div>
-            <div class="dropdown">
-                <button class="dropbtn">Drivers</button>
-                <div class="dropdown-content">
-                    <a href="/drivers">All Drivers</a>
-                    <a href="/driver_stats">Driver Stats</a>
-                </div>
+        </div>
+        <div class="dropdown">
+            <button class="dropbtn">Drivers</button>
+            <div class="dropdown-content">
+                <a href="/drivers">All Drivers</a>
+                <a href="/driver_stats">Driver Stats</a>
             </div>
             <a href="/results">Results</a>
             <a href="/pit_stops">Pit Stops</a>
@@ -52,34 +53,121 @@
 
         <h1>F1 - Qualifying</h1>
 
+        <form method="post" action="{{ url_for('qualifying')}}" class="search_form">
+            <label for="search_query" class="visually-hidden"></label>
+            <div class="search_container">
+                <input type="text" id="search_query" name="search_query" placeholder="Search for a qualifying driver data" />
+                <button type="submit">Search</button>
+            </div>
+        </form>
+
         <form method="post" action="{{ url_for('qualifying') }}">
             <label for="selected_surname">Select Qualifying Driver by Surname:</label>
             <select name="selected_surname" id="selected_surname">
-                <option value="">All Drivers</option>
+                <option value="">All Qualifying Data</option>
                 {% for surname in driver_surnames %}
                     <option value="{{ surname }}" {% if selected_surname == surname %}selected{% endif %}>{{ surname }}</option>
                 {% endfor %}
             </select>
             <button type="submit">Select</button>
-            <a href="{{ url_for('qualifying') }}"><button type="button">Reset Driver</button></a>
+            <a href="{{ url_for('qualifying') }}"><button type="button">Reset Qualifying Data</button></a>
         </form> 
+
+        <div style="float: right; margin-top: -25px;">
+            <button onclick="openAddModal()">Add New Qualifying Data</button>
+        </div>
+
+        <div id="addModal" class="modal">
+            <div class = "modal-content" id="addQualifyingForm" method="post" action="{{ url_for('add_qualifying') }}">
+                <form class = "modal-form" id="addQualifyingForm" method="post" action="{{ url_for('add_qualifying') }}">
+                    <h2>Add New Qualifying Data</h2>
+                    <p>Please fill in this form to add a new qualifying data.</p>
+
+                    <label for="raceId">Race ID:</label>
+                    <input type="number" name="raceId" placeholder="Enter Race ID" required/>
+    
+                    <label for="driverId">Driver ID:</label>
+                    <input type="number" name="driverId" placeholder="Enter Driver ID" required/>
+    
+                    <label for="constructorId">Constructor ID:</label>
+                    <input type="number" name="constructorId" placeholder="Enter Constructor ID" required/>
+                    
+                    <label for="number">Qualifying Number:</label>
+                    <input type="number" name="number" placeholder="Enter Qualifying Number" required/>
+                    
+                    <label for="position">Qualifying Position:</label>
+                    <input type="number" name="position" placeholder="Enter Qualifying Position" required/>
+                    
+                    <label for="q1">Qualifying 1:</label>
+                    <input type="text" name="q1" placeholder="Enter Qualifying 1 Time In Format: 1:26.907" required/>
+                    
+                    <label for="q2">Qualifying 2:</label>
+                    <input type="text" name="q2" placeholder="Enter Qualifying 2 Time In Format: 1:26.907" required/>
+
+                    <label for="q3">Qualifying 3:</label>
+                    <input type="text" name="q3" placeholder="Enter Qualifying 3 Time In Format: 1:26.907" required/>
+    
+                    <button type="submit">Add Qualifying Data</button>
+    
+                    <button type="button" onclick="closeAddModal()">Cancel</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="editModal" class="modal">
+            <div class = "modal-content" id="editQualifyingForm" method="post" action="{{ url_for('edit_qualifying') }}">
+                <form class = "modal-form" id="editQualifyingForm" method="post" action="{{ url_for('edit_qualifying') }}">
+                    <h2>Edit Qualifying Data</h2>
+                    <p>Please fill in this form to edit a circuit.</p>
+    
+                    <label for="qualifyId">Qualifying ID:</label>
+                    <input type="number" name="qualifyId" id="qualifyId" required readonly/>
+    
+                    <label for="raceId">Race ID:</label>
+                    <input type="number" name="raceId" placeholder="Enter Race ID" required/>
+    
+                    <label for="driverId">Driver ID:</label>
+                    <input type="number" name="driverId" placeholder="Enter Driver ID" required/>
+    
+                    <label for="constructorId">Constructor ID:</label>
+                    <input type="number" name="constructorId" placeholder="Enter Constructor ID" required/>
+                    
+                    <label for="number">Qualifying Number:</label>
+                    <input type="number" name="number" placeholder="Enter Qualifying Number" required/>
+                    
+                    <label for="position">Qualifying Position:</label>
+                    <input type="number" name="position" placeholder="Enter Qualifying Position" required/>
+                    
+                    <label for="q1">Qualifying 1:</label>
+                    <input type="text" name="q1" placeholder="Enter Qualifying 1 Time In Format: 1:26.907" required/>
+                    
+                    <label for="q2">Qualifying 2:</label>
+                    <input type="text" name="q2" placeholder="Enter Qualifying 2 Time In Format: 1:26.907" required/>
+
+                    <label for="q3">Qualifying 3:</label>
+                    <input type="text" name="q3" placeholder="Enter Qualifying 3 Time In Format:   1:26.907" required/>
+    
+                    <button type="submit">Edit Qualifying</button>
+                    <button type="button" onclick="closeEditModal()">Cancel</button>
+                </form>
+            </div>
+        </div>
 
         <table>
             <tr>
-                <th>Qualify ID</th>
                 <th>Race Date</th>
                 <th>Driver Name</th>
                 <th>Driver Surname</th>
                 <th>Constructor Name</th>
                 <th>Number</th>
                 <th>Position</th>
-                <th>Qualifying 1</th>
-                <th>Qualifying 2</th>
-                <th>Qualifying 3</th>
+                <th>Qualifying Time 1</th>
+                <th>Qualifying Time 2</th>
+                <th>Qualifying Time 3</th>
+                <th>Edit/Delete</th>
             </tr>
             {% for qualify in qualifying %}
             <tr>
-                <td>{{ qualify[0] }}</td>
                 <td>{{ qualify[1] }}</td>
                 <td>{{ qualify[2] }}</td>
                 <td>{{ qualify[3] }}</td>
@@ -89,8 +177,34 @@
                 <td>{{ qualify[7] }}</td>
                 <td>{{ qualify[8] }}</td>
                 <td>{{ qualify[9] }}</td>
+                <td>
+                    <button type="button" onclick="openEditModal('{{ qualify[0] }}')">Edit Qualifying Data</button>
+                    <form method="post" action="{{ url_for('delete_qualifying', qualifyId=qualify[0]) }}">
+                        <button class="delete" type="submit" onclick="return confirm('Are you sure you want to delete this qualifying data?')">Delete Qualifying Data</button>
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </table>
+
+        <script>
+            function openEditModal(qualifyId) {
+                document.getElementById("qualifyId").value = qualifyId;
+                document.getElementById("editModal").style.display = "block";
+            }
+    
+            function closeEditModal() {
+                document.getElementById("editModal").style.display = "none";
+            }
+    
+            function openAddModal() {
+                document.getElementById("addModal").style.display = "block";
+            }
+        
+            function closeAddModal() {
+                document.getElementById("addModal").style.display = "none";
+            }
+        </script>
+
     </body>
 </html>

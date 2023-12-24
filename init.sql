@@ -158,19 +158,23 @@ LOAD DATA
 TABLE
     circuits FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
 
--- Create the table if it doesn't exist
-CREATE TABLE
-    IF NOT EXISTS qualifying (
-        qualifyId INT,
-        raceId INT,
-        driverId INT,
-        constructorId INT,
-        number INT,
-        position INT,
-        q1 TIME,
-        q2 TIME,
-        q3 TIME
-    );
+
+CREATE TABLE IF NOT EXISTS qualifying (
+    qualifyId INT AUTO_INCREMENT,
+    raceId INT,
+    driverId INT,
+    constructorId INT,
+    number INT,
+    position INT,
+    q1 TIME,
+    q2 TIME,
+    q3 TIME,
+
+    PRIMARY KEY(qualifyId),
+    FOREIGN KEY (raceId) REFERENCES races(raceId) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (driverId) REFERENCES drivers(driverId) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (constructorId) REFERENCES constructors(constructorId) ON UPDATE CASCADE ON DELETE SET NULL
+);
 
 -- Load data from CSV file into the table
 LOAD DATA
