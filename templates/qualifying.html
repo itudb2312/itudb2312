@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,
         initial-scale=1.0" />
-    <title>F1 - Circuits</title>
+    <title>F1 - Qualifying</title>
     <link rel="stylesheet" href="{{ url_for('static',filename='styles/style.css') }}" />
 </head>
 
@@ -51,13 +51,13 @@
         <form method="post" action="{{ url_for('qualifying') }}">
             <label for="selected_surname">Select Qualifying Driver by Surname:</label>
             <select name="selected_surname" id="selected_surname">
-                <option value="">All Drivers</option>
+                <option value="">All Qualifying Data</option>
                 {% for surname in driver_surnames %}
                     <option value="{{ surname }}" {% if selected_surname == surname %}selected{% endif %}>{{ surname }}</option>
                 {% endfor %}
             </select>
             <button type="submit">Select</button>
-            <a href="{{ url_for('qualifying') }}"><button type="button">Reset Driver</button></a>
+            <a href="{{ url_for('qualifying') }}"><button type="button">Reset Qualifying Data</button></a>
         </form> 
 
         <div style="float: right; margin-top: -25px;">
@@ -92,7 +92,7 @@
                     <input type="text" name="q2" placeholder="Enter Qualifying 2 Time In Format: 1:26.907" required/>
 
                     <label for="q3">Qualifying 3:</label>
-                    <input type="number" name="q3" placeholder="Enter Qualifying 3 Time In Format: 1:26.907" required/>
+                    <input type="text" name="q3" placeholder="Enter Qualifying 3 Time In Format: 1:26.907" required/>
     
                     <button type="submit">Add Qualifying Data</button>
     

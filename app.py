@@ -579,26 +579,49 @@ def edit_sprint_result():
 
 @app.route('/circuits', methods=['GET', 'POST'])
 def circuits():
-    selected_hemisphere = "All Hemispheres"
-    if request.method == 'POST':
-        selected_hemisphere = request.form.get('selected_hemisphere', "All Hemispheres")
+    selected_hemisphere = request.form.get('selected_hemisphere') if request.method == 'POST' else None
+    search_query = request.form.get('search_query') if request.method == 'POST' else None
 
-    select_query = """SELECT circuits.circuitId, circuits.name, circuits.location, circuits.country, MAX(circuits.alt) as altitude, circuits.url
-                    FROM circuits"""
+    select_query = """
+        SELECT
+            circuits.circuitId,
+            circuits.name,
+            circuits.location,
+            circuits.country,
+            MAX(circuits.alt) as altitude,
+            circuits.url
+        FROM
+            circuits
+    """
 
-    if selected_hemisphere == "Northern Hemisphere":
-        select_query += " WHERE circuits.lat > 0"
-    elif selected_hemisphere == "Southern Hemisphere":
-        select_query += " WHERE circuits.lat < 0"
+    params = ()
+
+    if selected_hemisphere and selected_hemisphere != "All Hemispheres":
+        select_query += " WHERE circuits.lat > 0" if selected_hemisphere == "Northern Hemisphere" else " WHERE circuits.lat < 0"
+
+    if search_query:
+        search_query = "%" + search_query + "%"
+        if 'WHERE' in select_query:
+            select_query += " AND (circuits.name LIKE %s OR circuits.location LIKE %s OR circuits.country LIKE %s)"
+        else:
+            select_query += " WHERE (circuits.name LIKE %s OR circuits.location LIKE %s OR circuits.country LIKE %s)"
+        params += (search_query, search_query, search_query)
 
     select_query += """
-                    GROUP BY circuits.circuitId, circuits.name, circuits.location, circuits.country, circuits.url
-                    ORDER BY altitude DESC;"""
+        GROUP BY
+            circuits.circuitId,
+            circuits.name,
+            circuits.location,
+            circuits.country,
+            circuits.url
+        ORDER BY
+            altitude DESC
+    """
 
-    cursor.execute(select_query)
+    cursor.execute(select_query, params)
     result = cursor.fetchall()
 
-    return render_template('circuits.html', circuits=result, selected_hemisphere=selected_hemisphere)
+    return render_template('circuits.html', circuits=result, selected_hemisphere=selected_hemisphere if selected_hemisphere else "All Hemispheres")
 
 @app.route('/add_circuit', methods=['POST'])
 def add_circuit():
@@ -650,7 +673,8 @@ def qualifying():
     cursor.execute("SELECT DISTINCT driverId FROM qualifying")
     drivers = [str(driver[0]) for driver in cursor.fetchall()]
 
-    selected_surname = request.form.get('selected_surname') if request.method == 'POST' else ""
+    selected_surname = request.form.get('selected_surname') if request.method == 'POST' else None
+    search_query = request.form.get('search_query') if request.method == 'POST' else None
 
     select_query = """
         SELECT
@@ -674,12 +698,22 @@ def qualifying():
             constructors ON qualifying.constructorId = constructors.constructorId
     """
 
+    params = ()
+
     if selected_surname and selected_surname != "All Drivers":
         select_query += " WHERE drivers.surname = %s"
-        cursor.execute(select_query, (selected_surname,))
-    else:
-        select_query += " GROUP BY qualifying.qualifyId, constructorName ORDER BY raceDate DESC, position ASC LIMIT 100"
-        cursor.execute(select_query)
+        params += (selected_surname,)
+
+    if search_query:
+        search_query = "%" + search_query + "%"
+        if params:
+            select_query += " AND (drivers.forename LIKE %s OR drivers.surname LIKE %s OR constructors.name LIKE %s)"
+        else:
+            select_query += " WHERE (drivers.forename LIKE %s OR drivers.surname LIKE %s OR constructors.name LIKE %s)"
+        params += (search_query, search_query, search_query)
+
+    select_query += " GROUP BY qualifying.qualifyId, constructorName ORDER BY raceDate DESC, position ASC LIMIT 100"
+    cursor.execute(select_query, params)
 
     result = cursor.fetchall()
 
