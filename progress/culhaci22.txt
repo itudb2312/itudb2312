@@ -33,3 +33,17 @@
 - Updated app.py and wrote 3 new approutes which are add_driver, edit_driver and delete_driver to create insertion, update and deletion operations.
 - Updated the init.sql and fixed the enclosing issue by adding /r/n to line termination.
 - Updated init.sql and added PRIMARY KEY constraints and AUTO_INCREMENT to Primary keys on drivers and races tables.
+- Updated style.css for search bar in drivers.css
+- Updated drivers.html and added search bar
+- Updated app.py and added search bar query in drivers approute
+- Updated about_driver and added real time picture fetching javascript code for pictures of F1 drivers in stats
+
+23.12.2023
+- Updated api for fetching data
+- Updated app.py and added CRUD operations' approutes for races.html
+- Added search bar for races, updated app.py, races.html
+- Added foreign key constraints, and updated data types for the edit and add modals.
+
+- 24.12.2023
+- Fixed the races.html, now it shows the data without selection.
+- Added link to race_by_id page from races.html when clicking on a race name. 
