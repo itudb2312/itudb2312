@@ -998,7 +998,7 @@ def qualifying():
             select_query += " WHERE (drivers.forename LIKE %s OR drivers.surname LIKE %s OR constructors.name LIKE %s)"
         params += (search_query, search_query, search_query)
 
-    select_query += " GROUP BY qualifying.qualifyId, constructorName ORDER BY raceDate DESC, position ASC LIMIT 100"
+    select_query += " GROUP BY qualifying.qualifyId, constructorName ORDER BY raceDate DESC, position ASC LIMIT 3500"
     cursor.execute(select_query, params)
 
     result = cursor.fetchall()
