@@ -214,7 +214,7 @@ IGNORE 1 ROWS;
 
 -- Create the table if it doesn't exist
 CREATE TABLE IF NOT EXISTS qualifying (
-    qualifyId INT,
+    qualifyId INT AUTO_INCREMENT,
     raceId INT,
     driverId INT,
     constructorId INT,
