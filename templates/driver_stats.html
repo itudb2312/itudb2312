@@ -4,11 +4,25 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Driver Stats</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}" />
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='styles/style.css') }}"
+        />
     </head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,300;1,500;1,600&display=swap"
+        rel="stylesheet"
+    />
     <body>
         <div class="topnav">
-            <a href="/">Home</a>
+            <a href="/"
+                ><img
+                    src="{{ url_for('static', filename='styles/f1_logo.svg') }}"
+                    height="30"
+                    alt=""
+            /></a>
             <div class="dropdown">
                 <button class="dropbtn">Races</button>
                 <div class="dropdown-content">
@@ -26,14 +40,14 @@
             <a href="/results">Results</a>
             <a href="/pit_stops">Pit Stops</a>
             <a href="/driver_standings">Driver Standings</a>
-            <a href="/sprint_results">Sprint Results</a>            
+            <a href="/sprint_results">Sprint Results</a>
             <div class="dropdown">
                 <button class="dropbtn">Qualifying And Circuit Data</button>
                 <div class="dropdown-content">
                     <a href="/qualifying">Driver Qualifying Data</a>
                     <a href="/circuits">All Circuits</a>
                 </div>
-            </div>           
+            </div>
         </div>
 
         <div class="content">
@@ -48,11 +62,11 @@
                 </thead>
                 <tbody>
                     {% for driver in driver_stats %}
-                        <tr>
-                            <td>{{ driver[0] }}</td>
-                            <td>{{ driver[1] }} </td>
-                            <td>{{ driver[2] }}</td>
-                        </tr>
+                    <tr>
+                        <td>{{ driver[0] }}</td>
+                        <td>{{ driver[1] }}</td>
+                        <td>{{ driver[2] }}</td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>

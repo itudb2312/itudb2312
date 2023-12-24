@@ -155,6 +155,8 @@ table button:hover {
 
 .dropdown:hover .dropdown-content {
     display: block;
+    transition: 0.5s;
+    margin-top: -10px;
 }
 
 .content {

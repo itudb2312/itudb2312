@@ -325,6 +325,9 @@ def get_results(race_id=None):
         race_info = [result[0][5],result[0][6]]
         return render_template('results.html', results=result ,race_info=race_info)
 
+    result = []
+    return render_template('results.html',results=result)
+
 @app.route('/delete_driver/<int:driver_id>', methods=['POST'])
 def delete_driver(driver_id):
     if request.method == 'POST':
