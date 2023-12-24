@@ -4,6 +4,7 @@ services:
     restart: always
     platform: linux/x86_64
     container_name: "mysql"
+    command: [ "--max-allowed-packet=67108864" ]
     image: mysql:5.7
     ports:
       - 3306:3306
@@ -12,6 +13,7 @@ services:
       - MYSQL_DATABASE=mysql
       - MYSQL_USER=user
       - MYSQL_PASSWORD=password
+      - LANG=C.UTF-8
     volumes:
       - ./mysql-data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql

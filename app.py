@@ -151,6 +151,30 @@ def delete_race(race_id):
         db.commit()
 
     return redirect(url_for('races'))
+
+
+@app.route('/race/<int:race_id>/', methods=['GET','POST'])
+def race(race_id):
+    select_query = f"""SELECT * FROM races WHERE raceId = {race_id} LIMIT 1"""
+    cursor.execute(select_query)
+    result = cursor.fetchall()
+
+    return render_template('race_by_id.html',result=result[0])
+
+
+@app.route('/get_races', methods=['POST'])
+def get_races():
+    selected_year = request.form['year']
+
+    select_query = f"""SELECT name
+        FROM races
+        WHERE year = {selected_year}
+        """
+    
+    cursor.execute(select_query)
+    result = cursor.fetchall()
+    return jsonify({'races': result})
+
 @app.route('/who_won', methods=['GET'])
 def who_won():
     query = "SELECT * FROM races"
@@ -288,7 +312,9 @@ def get_results(race_id=None):
             drv.number,
             CONCAT(drv.forename, ' ', drv.surname) AS driver,
             con.name AS constructor,
-            res.points
+            res.points,
+            drv.driverId,
+            res.resultId
         FROM 
             results res
         JOIN (SELECT raceId FROM races WHERE year = {year} AND name = "{race_name}") AS r ON res.raceId = r.raceId
@@ -309,6 +335,8 @@ def get_results(race_id=None):
             CONCAT(drv.forename, ' ', drv.surname) AS driver,
             con.name AS constructor,
             res.points,
+            drv.driverId,
+            res.resultId,
             r.year,
             r.name
         FROM 
@@ -322,11 +350,160 @@ def get_results(race_id=None):
         
         cursor.execute(select_query)
         result = cursor.fetchall()
-        race_info = [result[0][5],result[0][6]]
+        race_info = [result[0][7],result[0][8]]
         return render_template('results.html', results=result ,race_info=race_info)
 
     result = []
     return render_template('results.html',results=result)
+
+@app.route('/create_result', methods=['GET', 'POST'])
+def create_result():
+    if request.method == 'POST':
+        race_year = request.form['race_year']
+        race_name = request.form['race_name']
+        driver_id = request.form['driver_id']
+        constructor_id = request.form['constructor_id']
+        number = request.form['number']
+        grid = request.form['grid']
+        position = request.form['position']
+        position_text = request.form['position_text']
+        position_order = request.form['position_order']
+        points = request.form['points']
+        laps = request.form['laps']
+        time = request.form['time']
+        milliseconds = request.form['milliseconds']
+        fastest_lap = request.form['fastest_lap']
+        rank = request.form['rank']
+        fastest_lap_time = request.form['fastest_lap_time']
+        fastest_lap_speed = request.form['fastest_lap_speed']
+        status_id = request.form['status_id']
+        
+        # Get race ID from year and name
+        race_query = f"""SELECT raceId FROM races WHERE name = "{race_name}" AND year = {race_year} """
+        cursor.execute(race_query)
+        race_result = cursor.fetchall()
+        race_id = race_result[0][0] if race_result else None
+
+        # Insert the result into the database
+        insert_query = """
+            INSERT INTO results (raceId, driverId, constructorId, number, grid, position, positionText, positionOrder, points, laps, time, milliseconds, fastestLap, rank, fastestLapTime, fastestLapSpeed, statusId)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        cursor.execute(insert_query, (race_id, driver_id, constructor_id, number, grid, position, position_text, position_order, points, laps, time, milliseconds, fastest_lap, rank, fastest_lap_time, fastest_lap_speed, status_id))
+        db.commit()
+
+        # Return to race/race_id/results page
+        return redirect(url_for('get_results', race_id=race_id))    
+
+    driver_query = f"""SELECT
+    driverId,
+    CONCAT(forename, ' ', surname) AS driver
+    FROM drivers
+    """
+    cursor.execute(driver_query)
+    driver_result = cursor.fetchall()
+
+    constructor_query = f"""SELECT
+    constructorId,
+    name
+    FROM constructors
+    """
+    cursor.execute(constructor_query)
+    constructor_result = cursor.fetchall()
+
+
+    return render_template('create_result.html', drivers=driver_result, constructors=constructor_result)
+    
+@app.route('/update_result/<int:result_id>', methods=['GET', 'POST'])    
+def update_result(result_id):
+    if request.method == 'POST':
+        race_year = request.form['race_year']
+        race_name = request.form['race_name']
+        driver_id = request.form['driver_id']
+        constructor_id = request.form['constructor_id']
+        number = request.form['number']
+        grid = request.form['grid']
+        position = request.form['position']
+        position_text = request.form['position_text']
+        position_order = request.form['position_order']
+        points = request.form['points']
+        laps = request.form['laps']
+        time = request.form['time']
+        milliseconds = request.form['milliseconds']
+        fastest_lap = request.form['fastest_lap']
+        rank = request.form['rank']
+        fastest_lap_time = request.form['fastest_lap_time']
+        fastest_lap_speed = request.form['fastest_lap_speed']
+        status_id = request.form['status_id']
+        
+        # Get race ID from year and name
+        race_query = f"""SELECT raceId FROM races WHERE name = "{race_name}" AND year = {race_year} """
+        cursor.execute(race_query)
+        race_result = cursor.fetchall()
+        race_id = race_result[0][0] if race_result else None
+
+        
+        # Convert values to integers if they are not None
+        fastest_lap = int(fastest_lap) if fastest_lap is not None and fastest_lap != 'None' else 0
+        rank = int(rank) if rank is not None and rank != 'None' else 0
+        milliseconds = int(milliseconds) if milliseconds is not None and milliseconds != 'None' else 0
+        position = int(position) if position is not None and position != 'None' else 0
+        position_order = int(position_order) if position_order is not None and position_order != 'None' else 0
+        points = int(points) if points is not None and points != 'None' else 0
+        laps = int(laps) if laps is not None and laps != 'None' else 0
+        grid = int(grid) if grid is not None and grid != 'None' else 0
+        number = int(number) if number is not None and number != 'None' else 0
+
+        update_query = """
+            UPDATE results
+            SET raceId = %s, driverId = %s, constructorId = %s, number = %s, grid = %s, position = %s, positionText = %s, positionOrder = %s, points = %s, laps = %s, time = %s, milliseconds = %s, fastestLap = %s, rank = %s, fastestLapTime = %s, fastestLapSpeed = %s, statusId = %s
+            WHERE resultId = %s
+            """
+
+        cursor.execute(update_query, (race_id, driver_id, constructor_id, number, grid, position, position_text, position_order, points, laps, time, milliseconds, fastest_lap, rank, fastest_lap_time, fastest_lap_speed, status_id, result_id))
+        db.commit()
+
+        # Return to race/race_id/results page
+        return redirect(url_for('get_results', race_id=race_id))   
+ 
+    select_query = f"""SELECT * FROM results WHERE resultId = {result_id} LIMIT 1"""
+ 
+    cursor.execute(select_query)
+    result = cursor.fetchall()
+
+    race_query = f"""SELECT year,name FROM races where raceId = {result[0][1]}"""
+    cursor.execute(race_query)
+    race = cursor.fetchall()
+    print(race)
+
+    driver_query = f"""SELECT
+    driverId,
+    CONCAT(forename, ' ', surname) AS driver
+    FROM drivers WHERE driverId = {result[0][2]}
+    """
+    cursor.execute(driver_query)
+    driver_result = cursor.fetchall()
+
+    constructor_query = f"""SELECT
+    constructorId,
+    name
+    FROM constructors  WHERE constructorId = {result[0][3]}
+    """
+    cursor.execute(constructor_query)
+    constructor_result = cursor.fetchall()
+    
+    return render_template('update_result.html',result=result[0],race=race[0],drivers=driver_result, constructors=constructor_result)
+
+@app.route('/delete_result/<int:result_id>', methods=['POST'])
+def delete_result(result_id):
+    if request.method == 'POST':
+        # Delete result from the database based on the result_id
+        delete_query = "DELETE FROM results WHERE resultId = %s"
+        cursor.execute(delete_query, (result_id,))
+        # Commit the changes to the database
+        db.commit()
+
+    return redirect(url_for('get_results'))
 
 @app.route('/delete_driver/<int:driver_id>', methods=['POST'])
 def delete_driver(driver_id):
@@ -389,61 +566,6 @@ def edit_driver():
         # Redirect to the drivers page or any other page as needed
         return redirect(url_for('drivers'))
     
-
-@app.route('/create_result', methods=['GET', 'POST'])
-def create_result():
-    if request.method == 'POST':
-        result_id = request.form['result_id']
-        race_id = request.form['race_id']
-        driver_id = request.form['driver_id']
-        constructor_id = request.form['constructor_id']
-        number = request.form['number']
-        grid = request.form['grid']
-        position = request.form['position']
-        position_text = request.form['position_text']
-        position_order = request.form['position_order']
-        points = request.form['points']
-        laps = request.form['laps']
-        time = request.form['time']
-        milliseconds = request.form['milliseconds']
-        fastest_lap = request.form['fastest_lap']
-        rank = request.form['rank']
-        fastest_lap_time = request.form['fastest_lap_time']
-        fastest_lap_speed = request.form['fastest_lap_speed']
-        status_id = request.form['status_id']
-        
-        
-        # Insert the result into the database
-        insert_query = f"INSERT INTO results (raceId, driverId, position, points) VALUES ({race_id}, {driver_id}, {position}, {points})"
-        cursor.execute(insert_query)
-        db.commit()
-        
-        return "Result created successfully"
-    
-    return render_template('create_result.html')
-    
-
-@app.route('/race/<int:race_id>/', methods=['GET','POST'])
-def race(race_id):
-    select_query = f"""SELECT * FROM races WHERE raceId = {race_id} LIMIT 1"""
-    cursor.execute(select_query)
-    result = cursor.fetchall()
-
-    return render_template('race_by_id.html',result=result[0])
-
-
-@app.route('/get_races', methods=['POST'])
-def get_races():
-    selected_year = request.form['year']
-
-    select_query = f"""SELECT name
-        FROM races
-        WHERE year = {selected_year}
-        """
-    
-    cursor.execute(select_query)
-    result = cursor.fetchall()
-    return jsonify({'races': result})
 
 @app.route('/pit_stops/',methods=['GET','POST'])
 @app.route('/race/<int:race_id>/pit_stops/', methods=['GET', 'POST'])

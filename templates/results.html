@@ -263,11 +263,22 @@
                 {% else %}
                 <div class="result_number">{{ result[1] }}</div>
                 {% endif %}
-                <div class="result_driver">{{ result[2] }}</div>
+                <div class="result_driver">
+                    <a href="/about_driver/{{result[5]}}">{{ result[2] }}</a>
+                </div>
                 <div class="result_constructor">{{ result[3] }}</div>
                 <div class="result_points">{{ result[4] }}</div>
-                <a href="" class="result_btn result_btn_edit">Edit</a>
-                <a href="" class="result_btn result_btn_delete">Delete</a>
+                <a
+                    href="/update_result/{{ result[6] }}"
+                    class="result_btn result_btn_edit"
+                    >Edit</a
+                >
+                <button
+                    class="result_btn result_btn_delete"
+                    onclick="confirmDelete(event, {{ result[6] }})"
+                >
+                    Delete
+                </button>
             </div>
             {% endfor %} {%endif%}
         </div>
@@ -296,6 +307,29 @@
                     });
                 });
             });
+
+            function confirmDelete(event, result_id) {
+                event.preventDefault(); // Butonun varsayılan davranışını engelle
+
+                const result = confirm("Are you sure you want to delete?"); // Kullanıcıya sor
+
+                if (result) {
+                    fetch(`/delete_result/${result_id}`, {
+                        method: "POST",
+                    })
+                        .then((response) => {
+                            alert("Record deleted successfully!");
+                            window.location.reload();
+                        })
+                        .catch((error) => {
+                            alert(
+                                "An error occurred while deleting the record!"
+                            );
+                        });
+                } else {
+                    // Silme işlemi iptal edildi
+                }
+            }
         </script>
     </body>
 </html>
