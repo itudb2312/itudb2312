@@ -16,3 +16,9 @@
 23.12.2023 - 22.12.2023
 - CRUD operations for driver_standings and sprint_results tables are completed.
 - Filtering options are added.
+- app.py is updated
+- The queries are updated.
+
+24.12.2023 - 25.12.2023
+- The bugs are fixed (driver_standings.html and sprint_results.html)
+- Init.sql file is updated to add auto_increment etc.

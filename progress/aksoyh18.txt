@@ -1,0 +1,59 @@
+08.11.2023
+- Progress file created.
+
+10.11.2023
+- Csv files added to data folder
+- Docker-Compose file added for running the mySQL in a container
+- Added init.sql file for database initilization
+- Added results and pit-stops table into mysql via init.sql
+- app.py file added for running the flask app
+- database connection added to app.py
+- Added templates for pit-stops and results
+- Added get endpoints for pit-stops and results
+- Added requirements.txt file for installing dependencies
+- Added .gitignore file for ignoring the unnecessary files
+
+23.11.2023
+- Added results page with filtering
+- Changed template html of results page
+- Added javascript to results page for selecting race year and name selection box
+
+27.11.2023
+- Added styling for results page
+- Added order by and more details to results get query
+
+15.12.2023
+- Added result endpoint with parameter for race link
+- Changed docker-compose file to run mysql container also for arm arch
+- Added race_by_id.html template
+
+17.12.2023
+- Added new design for whole website
+- Added new logo
+- Changed topnav bar
+- Added font from Google Fonts
+
+21.12.2023
+- Added new features to race_by_id.html
+- Added new design to race_by_id.html
+
+23.12.2023
+- Added Create operation for Result page
+- Added Update operation for Result page
+- Added Delete Operation for Result page
+- Added templates for CRUD pages
+- Added design for CRUD GUI pages
+- Added GUI for CRUD operations of pit_stops table
+- Merged branch to main
+- Typo fixes
+
+24.12.2023
+- Changed topnav for whole pages
+- Fixed CRUD bugs of results page
+- Changed whole table design structure of drivers
+- Changed whole table design structure of races
+- Added wikipedia link to race page
+- Fixed topnav bar on Qualifying pages
+- Added Create operation for pit stop page
+- Added Update operation for pit stop page
+- Added Delete Operation for pit stop page
