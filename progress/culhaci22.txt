@@ -46,4 +46,6 @@
 
 - 24.12.2023
 - Fixed the races.html, now it shows the data without selection.
-- Added link to race_by_id page from races.html when clicking on a race name. 
+- Added link to race_by_id page from races.html when clicking on a race name.
+- Added circuit name to race_by_id page.
+- Minor bug fixes and final reworks.
