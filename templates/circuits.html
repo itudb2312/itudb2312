@@ -55,6 +55,8 @@
             </div>
         </div>
 
+    <h1>Circuits</h1>
+
     <form method="post" action="{{ url_for('circuits')}}" class="search_form">
         <label for="search_query" class="visually-hidden"></label>
         <div class="search_container">
@@ -63,7 +65,6 @@
         </div>
     </form>
 
-    <p>Below is a table of all the circuits that have been used in F1.</p>
     <form method="post" action="{{ url_for('circuits') }}">
         <label for="selected_hemisphere">Select Hemisphere:</label>
         <select name="selected_hemisphere" id="selected_hemisphere">
