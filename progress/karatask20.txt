@@ -21,6 +21,7 @@ join, order by, group by statements better
 - Added more functionality to qualifying and circuit queries and made them show more meaningful data
 - Updated all hmtl files according to new features/fixes
 - Fixed errors in app.route and webpage connections
+- Added a new condition and limit to get qualifying request
 
 23.12.2023
 - Updated table properties in init.sql adding constraints such as primary keys, auto_increment etc.
@@ -38,3 +39,4 @@ functionality
 - Revised and updated app routes for CRUD operations for qualifying and circuits tables
 - Enhanced API for fetching data
 - Fixed UI bugs and typos in circuits.html and qualifying.html
+- Updated condition and limit of get qualifying request
