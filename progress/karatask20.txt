@@ -5,9 +5,6 @@
 - Two approutes are created for circuits and qualifying in app.py
 - Updated README.md to fix a redundant username error
 
-12.11.2023
-- Updated progress file for karatask20
-
 25.11.2023
 - Changed circuit and qualifying queries to represent select, where, 
 join, order by, group by statements better
@@ -16,14 +13,28 @@ join, order by, group by statements better
 - Fixed the group by and order by errors in circuit and qualifying queries and updated their pages accordingly
 - Updated progress file for karatask20
 
-16.12.2023 - 17.12.2023
+16.12.2023
 - Added filtering by driver and hemisphere to related webpages and queries
-- Added more functionality to qualifying and circuit queries and made them show more useful data
 - Updated selection for qualifying and circuit data to dropdown
+
+ 17.12.2023
+- Added more functionality to qualifying and circuit queries and made them show more meaningful data
 - Updated all hmtl files according to new features/fixes
+- Fixed errors in app.route and webpage connections
 
 23.12.2023
 - Updated table properties in init.sql adding constraints such as primary keys, auto_increment etc.
-- Added search functionality for circuits and qualifying tables
+- Added search functionality for circuits.html and qualifying.html
 - Added CRUD operations to both tables by writing new python functions for creating, editing and deleting elements
-- Updated circuits and qualifying htmls according to all the changes, adding edit and create element forms and element deletition functionality
+- Updated circuits and qualifying htmls according to all the changes, adding edit and create element forms and element deletition 
+functionality
+- Added buttons, forms and JS scripts for qualifying.html and circuits.html
+- Fixed errors init.sql and app.route connections
+
+24.12.2023
+- Linked URLs of circuits table to Wikipedia
+- Got rid of query redundancy in search queries
+- Optimized CRUD operations for qualifying and circuits tables
+- Revised and updated app routes for CRUD operations for qualifying and circuits tables
+- Enhanced API for fetching data
+- Fixed UI bugs and typos in circuits.html and qualifying.html
