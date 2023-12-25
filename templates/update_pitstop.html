@@ -78,16 +78,18 @@
         </div>
 
         <div class="content">
-            <h1 style="margin-bottom: 20px">Edit Result</h1>
-            <form action="/update_result/{{result[0]}}" method="post">
+            <h1 style="margin-bottom: 20px">Update Result</h1>
+            <form
+                action="/update_pit_stop/{{pit_stop[6]}}/{{pit_stop[7]}}/{{pit_stop[1]}}/"
+                method="post"
+            >
                 <label for="race_year">Race Year:</label>
                 <select id="race_year" name="race_year">
-                    {% for year in range(1950, 2024) %} {% if year == race[0] %}
-                    <option value="{{ year }}" selected>{{ year }}</option>
-                    {% else %}
-                    <option value="{{ year }}">{{ year }}</option>
-                    {%endif%} {% endfor %}</select
-                ><br />
+                    {% for year in range(1950, 2024) %}
+                    <option value="{{ race[0] }}">{{ race[0] }}</option>
+                    {% endfor %}
+                </select>
+                <br />
 
                 <label for="race_name">Race Name:</label>
                 <select id="race_name" name="race_name">
@@ -101,7 +103,7 @@
 
                 <label for="driver_id">Driver: </label>
                 <select id="driver_id" name="driver_id">
-                    {% for driver in drivers %} {%if driver[0] == result[2]%}
+                    {% for driver in drivers %} {%if driver[0] == pit_stop[7]%}
                     <option value="{{ driver[0] }}" selected>
                         {{ driver[1] }}
                     </option>
@@ -111,81 +113,21 @@
                 </select>
                 <br />
 
-                <label for="constructor_id">Constructor:</label>
-                <select id="constructor_id" name="constructor_id">
-                    {% for constructor in constructors %} {%if constructor[0] ==
-                    result[3]%}
-                    <option value="{{ constructor[0] }}" selected>
-                        {{ constructor[1] }}
-                    </option>
-                    {% else %}
-                    <option value="{{ constructor[0] }}">
-                        {{ constructor[1] }}
-                    </option>
-                    {%endif%} {% endfor %}
-                </select>
-                <br />
-
-                <label for="number">Number:</label>
+                <label for="stop">Stop:</label>
                 <input
                     type="text"
-                    id="number"
-                    name="number"
-                    value="{{result[4]}}"
+                    id="stop"
+                    name="stop"
+                    value="{{pit_stop[1]}}"
                 />
                 <br />
 
-                <label for="grid">Grid:</label>
+                <label for="lap">Lap:</label>
                 <input
                     type="text"
-                    id="grid"
-                    name="grid"
-                    value="{{result[5]}}"
-                />
-                <br />
-
-                <label for="position">Position:</label>
-                <input
-                    type="text"
-                    id="position"
-                    name="position"
-                    value="{{result[6]}}"
-                />
-                <br />
-
-                <label for="position_text">Position Text:</label>
-                <input
-                    type="text"
-                    id="position_text"
-                    name="position_text"
-                    value="{{result[7]}}"
-                />
-                <br />
-
-                <label for="position_order">Position Order:</label>
-                <input
-                    type="text"
-                    id="position_order"
-                    name="position_order"
-                    value="{{result[8]}}"
-                />
-                <br />
-
-                <label for="points">Points:</label>
-                <input
-                    type="text"
-                    id="points"
-                    name="points"
-                    value="{{result[9]}}"
-                />
-                <br />
-
-                <label for="laps">Laps:</label>
-                <input
-                    type="text"
-                    id="laps"
-                    name="laps"
-                    value="{{result[10]}}"
+                    id="lap"
+                    name="lap"
+                    value="{{pit_stop[2]}}"
                 />
                 <br />
 
@@ -194,7 +136,16 @@
                     type="text"
                     id="time"
                     name="time"
-                    value="{{result[11]}}"
+                    value="{{pit_stop[3]}}"
+                />
+                <br />
+
+                <label for="duration">Duration:</label>
+                <input
+                    type="text"
+                    id="duration"
+                    name="duration"
+                    value="{{pit_stop[4]}}"
                 />
                 <br />
 
@@ -203,52 +154,7 @@
                     type="text"
                     id="milliseconds"
                     name="milliseconds"
-                    value="{{result[12]}}"
-                />
-                <br />
-
-                <label for="fastest_lap">Fastest Lap:</label>
-                <input
-                    type="text"
-                    id="fastest_lap"
-                    name="fastest_lap"
-                    value="{{result[13]}}"
-                />
-                <br />
-
-                <label for="rank">Rank:</label>
-                <input
-                    type="text"
-                    id="rank"
-                    name="rank"
-                    value="{{result[14]}}"
-                />
-                <br />
-
-                <label for="fastest_lap_time">Fastest Lap Time:</label>
-                <input
-                    type="text"
-                    id="fastest_lap_time"
-                    name="fastest_lap_time"
-                    value="{{result[15]}}"
-                />
-                <br />
-
-                <label for="fastest_lap_speed">Fastest Lap Speed:</label>
-                <input
-                    type="text"
-                    id="fastest_lap_speed"
-                    name="fastest_lap_speed"
-                    value="{{result[16]}}"
-                />
-                <br />
-
-                <label for="status_id">Status ID:</label>
-                <input
-                    type="text"
-                    id="status_id"
-                    name="status_id"
-                    value="{{result[17]}}"
+                    value="{{pit_stop[5]}}"
                 />
                 <br />
 

@@ -478,7 +478,6 @@ def update_result(result_id):
     race_query = f"""SELECT year,name FROM races where raceId = {result[0][1]}"""
     cursor.execute(race_query)
     race = cursor.fetchall()
-    print(race)
 
     driver_query = f"""SELECT
     driverId,
@@ -584,7 +583,9 @@ def pit_stops(race_id=None):
         p.lap,
         p.time,
         p.duration,
-        p.milliseconds
+        p.milliseconds,
+        r.raceId,
+        d.driverId
         FROM pit_stops p
         JOIN drivers d ON p.driverId = d.driverId
         JOIN races r ON p.raceId = r.raceId
@@ -606,6 +607,8 @@ def pit_stops(race_id=None):
         p.time,
         p.duration,
         p.milliseconds,
+        r.raceId,
+        d.driverId, 
         r.year,
         r.name
         FROM pit_stops p
@@ -618,7 +621,7 @@ def pit_stops(race_id=None):
         cursor.execute(select_query)
         result = cursor.fetchall()
         if result != []:
-            race_info = [result[0][6],result[0][7]]
+            race_info = [result[0][8],result[0][9]]
         else:  
             race_info = []
         return render_template('pit_stops.html', pit_stops=result ,race_info=race_info)
@@ -638,6 +641,136 @@ def pit_stops(race_id=None):
     race_info = []
 
     return render_template('pit_stops.html',pit_stops=result,race_info=race_info)
+
+@app.route('/create_pit_stop/', methods=['GET', 'POST'])
+def create_pit_stop():
+    if request.method == 'POST':
+        race_year = request.form['race_year']
+        race_name = request.form['race_name']
+        driver_id = request.form['driver_id']
+        stop = request.form['stop']
+        lap = request.form['lap']
+        time = request.form['time']
+        duration = request.form['duration']
+        milliseconds = request.form['milliseconds']
+        
+        
+        # Get race ID from year and name
+        race_query = f"""SELECT raceId FROM races WHERE name = "{race_name}" AND year = {race_year} """
+        cursor.execute(race_query)
+        race_result = cursor.fetchall()
+        race_id = race_result[0][0] if race_result else None
+
+        insert_query = """
+            INSERT INTO pit_stops (raceId, driverId, stop, lap, time, duration, milliseconds)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """
+
+        cursor.execute(insert_query,(race_id,driver_id,stop,lap,time,duration,milliseconds))
+        db.commit()
+
+        # Return to race/race_id/results page
+        return redirect(url_for('pit_stops', race_id=race_id))    
+
+    driver_query = f"""SELECT
+    driverId,
+    CONCAT(forename, ' ', surname) AS driver
+    FROM drivers
+    """
+    cursor.execute(driver_query)
+    driver_result = cursor.fetchall()
+
+    constructor_query = f"""SELECT
+    constructorId,
+    name
+    FROM constructors
+    """
+    cursor.execute(constructor_query)
+    constructor_result = cursor.fetchall()
+
+
+    return render_template('create_pitstop.html', drivers=driver_result, constructors=constructor_result)
+
+@app.route('/update_pit_stop/<int:race_id>/<int:driver_id>/<int:stop>/', methods=['GET', 'POST'])
+def update_pit_stop(race_id,driver_id,stop):
+    if request.method == 'POST':
+        race_year = request.form['race_year']
+        race_name = request.form['race_name']
+        driver_id = request.form['driver_id']
+        stop = request.form['stop']
+        lap = request.form['lap']
+        time = request.form['time']
+        duration = request.form['duration']
+        milliseconds = request.form['milliseconds']
+            # Get race ID from year and name
+        race_query = f"""SELECT raceId FROM races WHERE name = "{race_name}" AND year = {race_year} """
+        cursor.execute(race_query)
+        race_result = cursor.fetchall()
+        race_id = race_result[0][0] if race_result else None
+        
+        # Convert values to integers if they are not None
+        stop = int(stop) if stop is not None and stop != 'None' else 0
+        lap = int(lap) if lap is not None and lap != 'None' else 0
+        milliseconds = int(milliseconds) if milliseconds is not None and milliseconds != 'None' else 0
+        
+
+
+        update_query = """
+            UPDATE pit_stops
+            SET raceId = %s, driverId = %s, stop = %s, lap = %s, time = %s, duration = %s, milliseconds = %s
+            WHERE raceId = %s AND driverId = %s AND stop = %s
+        """
+        
+        cursor.execute(update_query, (race_id, driver_id, stop, lap, time, duration, milliseconds,race_id, driver_id, stop))
+        db.commit()
+        
+        # Return to pit_stops page
+        return redirect(url_for('pit_stops',race_id=race_id))
+
+    select_query = f"""SELECT
+    CONCAT(d.forename, ' ', d.surname) AS driver,
+    p.stop,
+    p.lap,
+    p.time,
+    p.duration,
+    p.milliseconds,
+    r.raceId,
+    d.driverId
+    FROM pit_stops p
+    JOIN drivers d ON p.driverId = d.driverId
+    JOIN races r ON p.raceId = r.raceId
+    WHERE  r.raceId = {race_id} and d.driverId = {driver_id} and p.stop = {stop}
+    ORDER BY p.milliseconds ASC
+    """
+    cursor.execute(select_query)
+    pit_stop = cursor.fetchall()
+
+    driver_query = f"""SELECT
+    driverId,
+    CONCAT(forename, ' ', surname) AS driver
+    FROM drivers
+    """
+    cursor.execute(driver_query)
+    driver_result = cursor.fetchall()
+
+    print(pit_stop[0][7],pit_stop[0][0])
+    print(driver_result[0][0],driver_result[0][1])
+
+    race_query = f"""SELECT year,name FROM races where raceId = {race_id}"""
+    cursor.execute(race_query)
+    race = cursor.fetchall()
+    
+    return render_template('update_pitstop.html', pit_stop=pit_stop[0], race=race[0], drivers=driver_result)
+
+@app.route('/delete_pit_stop/<int:race_id>/<int:driver_id>/<int:stop>/', methods=['POST'])
+def delete_pit_stop(race_id,driver_id,stop):
+    if request.method == 'POST':
+        # Delete result from the database based on the result_id
+        delete_query = "DELETE FROM pit_stops WHERE raceId = %s AND driverId = %s AND stop = %s"
+        cursor.execute(delete_query, (race_id,driver_id,stop))
+        db.commit()
+
+    return redirect(url_for('pit_stops'))
 
 @app.route('/driver_standings', methods=['GET', 'POST'])
 def driver_standings():

@@ -222,7 +222,7 @@
                     <div class="results_topbar_right_buttons">
                         <a
                             class="results_topbar_right_button rtrb_create"
-                            href="{{ url_for('create_result') }}"
+                            href="{{ url_for('create_pit_stop') }}"
                             >Create New Pitstop</a
                         >
                     </div>
@@ -230,9 +230,14 @@
                     <form method="POST" action="">
                         <label for="year">Yıl:</label>
                         <select id="year" name="year">
-                            {% for year in range(1950, 2024) %}
+                            {% for year in range(1950, 2024) %} {% if year ==
+                            race_info[0] %}
+                            <option value="{{ year }}" selected>
+                                {{ year }}
+                            </option>
+                            {% else %}
                             <option value="{{ year }}">{{ year }}</option>
-                            {% endfor %}
+                            {%endif%} {% endfor %}
                         </select>
 
                         <label for="race">Yarış İsmi:</label>
@@ -269,13 +274,20 @@
                     <td>{{ pit_stop[4] }}</td>
                     <td>{{ pit_stop[5] }}</td>
                     <td style="text-align: center">
-                        <a href="" class="pitstop_btn result_btn_edit">Edit</a>
+                        <a
+                            href="/update_pit_stop/{{pit_stop[6]}}/{{pit_stop[7]}}/{{pit_stop[1]}}/"
+                            class="pitstop_btn result_btn_edit"
+                            >Edit</a
+                        >
                     </td>
 
                     <td style="text-align: center">
-                        <a href="" class="pitstop_btn result_btn_delete"
-                            >Delete</a
+                        <button
+                            class="pitstop_btn pitstop_btn_delete"
+                            onclick="confirmDelete(event, {{ pit_stop[6] }}, {{ pit_stop[7] }}, {{ pit_stop[1] }})"
                         >
+                            Delete
+                        </button>
                     </td>
                 </tr>
                 {% endfor %}
@@ -307,6 +319,29 @@
                     });
                 });
             });
+
+            function confirmDelete(event, race_id, driver_id, stop) {
+                event.preventDefault(); // Butonun varsayılan davranışını engelle
+
+                const result = confirm("Are you sure you want to delete?"); // Kullanıcıya sor
+
+                if (result) {
+                    fetch(`/delete_pit_stop/${race_id}/${driver_id}/${stop}/`, {
+                        method: "POST",
+                    })
+                        .then((response) => {
+                            alert("Record deleted successfully!");
+                            window.location.reload();
+                        })
+                        .catch((error) => {
+                            alert(
+                                "An error occurred while deleting the record!"
+                            );
+                        });
+                } else {
+                    // Silme işlemi iptal edildi
+                }
+            }
         </script>
     </body>
 </html>
