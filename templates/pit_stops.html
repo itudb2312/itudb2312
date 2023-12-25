@@ -248,10 +248,10 @@
                 </div>
             </div>
             {% if race_info != [] %}
-            <h2 style="font-size: xx-large">
+            <h2 style="font-size: xx-large; margin-bottom: 20px">
                 {{ race_info[0]}} {{ race_info[1]}}
             </h2>
-            {% endif %} {%if pit_stops == [] %}
+            {% endif %} {%if pit_stops == [] and race_info != []%}
             <h2 style="font-size: xx-large">No Pit Stops Data Found</h2>
             {%else%}
             <table>

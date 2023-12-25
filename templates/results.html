@@ -256,7 +256,7 @@
             <h2 style="font-size: xx-large">
                 {{ race_info[0]}} {{ race_info[1]}}
             </h2>
-            {% endif %} {%if results == [] %}
+            {% endif %} {%if results == [] and race_info == [] %}
             <h2 style="font-size: xx-large">No Race Result Data Found</h2>
             {%else%} {% for result in results %}
             <div class="result">

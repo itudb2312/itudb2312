@@ -620,10 +620,14 @@ def pit_stops(race_id=None):
         
         cursor.execute(select_query)
         result = cursor.fetchall()
+        
         if result != []:
             race_info = [result[0][8],result[0][9]]
         else:  
-            race_info = []
+            race_query = f"""SELECT year,name FROM races where raceId = {race_id}"""
+            cursor.execute(race_query)
+            race = cursor.fetchall()
+            race_info = [race[0][0],race[0][1]]
         return render_template('pit_stops.html', pit_stops=result ,race_info=race_info)
 
     select_query = """SELECT
