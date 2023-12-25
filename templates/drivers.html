@@ -15,6 +15,19 @@
             rel="stylesheet"
         />
         <style>
+            a {
+                text-decoration: underline;
+                color: #000000;
+            }
+
+            a:hover {
+                text-decoration: underline;
+                color: #df0000;
+            }
+            .topnav a {
+                text-decoration: none;
+            }
+
             .driver_boxes {
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
@@ -205,11 +218,7 @@
                     />
 
                     <label for="url">URL:</label>
-                    <input
-                        type="text"
-                        name="url"
-                        placeholder="Enter URL"
-                    />
+                    <input type="text" name="url" placeholder="Enter URL" />
 
                     <button type="submit">Add Driver</button>
                     <button type="button" onclick="closeAddModal()">
@@ -248,7 +257,7 @@
                     <input type="number" name="number" id="number" required />
 
                     <label for="code">Code:</label>
-                    <input type="text" name="code" id="code" required/>
+                    <input type="text" name="code" id="code" required />
 
                     <label for="forename">Forename:</label>
                     <input type="text" name="forename" id="forename" required />
@@ -268,7 +277,7 @@
                     />
 
                     <label for="url">URL:</label>
-                    <input type="text" name="url" id="url"/>
+                    <input type="text" name="url" id="url" />
 
                     <button type="submit">Save Changes</button>
                     <button type="button" onclick="closeEditModal()">
@@ -323,7 +332,11 @@
                     <div class="driver_top">
                         <div class="driver_top_left">
                             <div class="driver_forename">{{ driver[4] }}</div>
-                            <div class="driver_surname">{{ driver[5] }}</div>
+                            <div class="driver_surname">
+                                <a href="/about_driver/{{ driver[0] }}"
+                                    >{{ driver[5] }}</a
+                                >
+                            </div>
                         </div>
 
                         {% if driver[2] != None %}

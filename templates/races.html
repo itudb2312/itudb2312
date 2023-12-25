@@ -24,6 +24,11 @@
                 text-decoration: underline;
                 color: #df0000;
             }
+
+            .topnav a {
+                text-decoration: none;
+            }
+
             .race_boxes {
                 /* grid -> 3 elements per row */
                 display: grid;
@@ -374,7 +379,6 @@
             </div>
         </div>
 
-
         <div class="content">
             <h1>Formula 1 Races</h1>
 
@@ -437,7 +441,10 @@
                             </button>
                         </div>
                         <div class="delete">
-                            <form method="post" action="{{ url_for('delete_race', race_id=race[0]) }}">
+                            <form
+                                method="post"
+                                action="{{ url_for('delete_race', race_id=race[0]) }}"
+                            >
                                 <button
                                     class="delete"
                                     type="submit"
@@ -473,6 +480,5 @@
                 document.getElementById("addModal").style.display = "none";
             }
         </script>
-
     </body>
 </html>
