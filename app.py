@@ -1059,23 +1059,23 @@ def qualifying():
             drivers ON qualifying.driverId = drivers.driverId
         JOIN
             constructors ON qualifying.constructorId = constructors.constructorId
+        WHERE
+            qualifying.position <= 10
+            AND races.date >= '2010-01-01'
     """
 
     params = ()
 
     if selected_surname and selected_surname != "All Drivers":
-        select_query += " WHERE drivers.surname = %s"
+        select_query += " AND drivers.surname = %s"
         params += (selected_surname,)
 
     if search_query:
         search_query = "%" + search_query + "%"
-        if params:
-            select_query += " AND (drivers.forename LIKE %s OR drivers.surname LIKE %s OR constructors.name LIKE %s)"
-        else:
-            select_query += " WHERE (drivers.forename LIKE %s OR drivers.surname LIKE %s OR constructors.name LIKE %s)"
+        select_query += " AND (drivers.forename LIKE %s OR drivers.surname LIKE %s OR constructors.name LIKE %s)"
         params += (search_query, search_query, search_query)
 
-    select_query += " GROUP BY qualifying.qualifyId, constructorName ORDER BY raceDate DESC, position ASC LIMIT 3500"
+    select_query += " GROUP BY qualifying.qualifyId, constructorName ORDER BY raceDate DESC, position ASC LIMIT 1000"
     cursor.execute(select_query, params)
 
     result = cursor.fetchall()
